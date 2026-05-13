@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion
+{
+    public class AtraccionUpdateModel : AtraccionCreateModel
+    {
+        public string Id { get; set; }
+    }
+}

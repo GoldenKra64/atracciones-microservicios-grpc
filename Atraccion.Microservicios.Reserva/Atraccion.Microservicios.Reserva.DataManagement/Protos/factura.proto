@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "Atraccion.Microservicios.Reserva.DataManagement.Protos";
+
+package factura;
+
+service FacturaService {
+  rpc GenerateInvoice (GenerateInvoiceRequest) returns (GenerateInvoiceResponse);
+}
+
+message GenerateInvoiceRequest {
+  int32 revId = 1;
+  int32 cliId = 2;
+  double total = 3;
+  string canal = 4;
+}
+
+message GenerateInvoiceResponse {
+  bool success = 1;
+  int32 facId = 2;
+}

@@ -1,0 +1,63 @@
+﻿using Asp.Versioning;
+using Atraccion.Microservicios.Atraccion.Api.Models.Common;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Destino;
+using Atraccion.Microservicios.Atraccion.Business.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
+{
+    [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    public class DestinoController : ControllerBase
+    {
+        private readonly IDestinoBusinessService _service;
+
+        public DestinoController(IDestinoBusinessService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAll()
+        {
+            var data = await _service.GetAllAsync();
+            return Ok(ApiResponse<IEnumerable<DestinoResponse>>.Ok(data));
+        }
+
+        [HttpGet("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var data = await _service.GetByIdAsync(id);
+            return Ok(ApiResponse<DestinoResponse>.Ok(data));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Create(CreateDestinoRequest request)
+        {
+            var id = await _service.CreateAsync(request);
+            return Ok(ApiResponse<int>.Ok(id, "Destino creado"));
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Update(UpdateDestinoRequest request, int id)
+        {
+            request.Id = id;
+            await _service.UpdateAsync(request);
+            return Ok(ApiResponse<string>.Ok("OK", "Destino actualizado"));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.LogicalDeleteAsync(id);
+            return Ok(ApiResponse<string>.Ok("OK", "Destino eliminado"));
+        }
+    }
+}

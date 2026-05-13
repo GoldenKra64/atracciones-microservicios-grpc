@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option csharp_namespace = "Atraccion.Microservicios.Atraccion.Api.Protos";
+
+package atraccion;
+
+service AtraccionService {
+  rpc GetTicketInfo (TicketRequest) returns (TicketResponse);
+  rpc GetHorarioByGuid (HorarioRequest) returns (HorarioResponse);
+  rpc ConsumeCapacity (ConsumeCapacityRequest) returns (ConsumeCapacityResponse);
+}
+
+message TicketRequest {
+  int32 ticId = 1;
+}
+
+message TicketResponse {
+  int32 ticId = 1;
+  string ticTitulo = 2;
+  double ticPrecio = 3;
+  string ticTipoParticipante = 4;
+  int32 horId = 5;
+}
+
+message HorarioRequest {
+  string guid = 1;
+}
+
+message HorarioResponse {
+  int32 horId = 1;
+  string horGuid = 2;
+  int32 cuposDisponibles = 3;
+  string horFecha = 4;
+  string horHoraInicio = 5;
+  string horHoraFin = 6;
+}
+
+message ConsumeCapacityRequest {
+  int32 horId = 1;
+  int32 cantidad = 2;
+}
+
+message ConsumeCapacityResponse {
+  bool success = 1;
+}

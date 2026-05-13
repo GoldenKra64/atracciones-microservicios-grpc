@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option csharp_namespace = "Atraccion.Microservicios.Factura.DataManagement.Protos";
+
+package cliente;
+
+service ClienteService {
+  rpc GetClienteById (ClienteRequest) returns (ClienteResponse);
+  rpc CreateCliente (CreateClienteRequest) returns (CreateClienteResponse);
+}
+
+message ClienteRequest {
+  int32 cliId = 1;
+}
+
+message ClienteResponse {
+  int32 cliId = 1;
+  string numeroIdentificacion = 2;
+  string correo = 3;
+  string nombres = 4;
+  string apellidos = 5;
+  string telefono = 6;
+  string direccion = 7;
+}
+
+message CreateClienteRequest {
+  int32 usuarioId = 1;
+  string numeroIdentificacion = 2;
+  string correo = 3;
+  string nombres = 4;
+  string apellidos = 5;
+  string telefono = 6;
+  string direccion = 7;
+}
+
+message CreateClienteResponse {
+  bool success = 1;
+  int32 cliId = 2;
+}
