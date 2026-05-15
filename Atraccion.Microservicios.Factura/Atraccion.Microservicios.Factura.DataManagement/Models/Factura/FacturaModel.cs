@@ -15,6 +15,9 @@ namespace Atraccion.Microservicios.Factura.DataManagement.Models.Factura
         public double Total { get; set; }
         public string OrigenCanal { get; set; } = null!;
         public string? Observacion { get; set; }
+        public int RevCodigo { get; set; }
+        public string? CorreoReceptor { get; set; }
+        public string? NombreReceptor { get; set; }
         public string Estado { get; set; }
     }
 }

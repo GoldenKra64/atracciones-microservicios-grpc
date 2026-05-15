@@ -1,4 +1,5 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Interfaces
         Task UpdateAsync(UpdateTicketRequest request);
 
         Task LogicalDeleteAsync(int id);
+
+        Task<HorarioDto> GetHorariosByTicketAsync(string guid);
     }
 }

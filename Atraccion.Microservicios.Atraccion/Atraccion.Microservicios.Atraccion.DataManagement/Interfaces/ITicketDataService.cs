@@ -11,6 +11,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Interfaces
     {
         Task<List<TicketModel>> GetAllAsync();
         Task<TicketModel> GetByIdAsync(int id);
+        Task<TicketModel> GetByGuidAsync(string id);
         Task<int> CreateAsync(TicketCreateModel model);
 
         Task UpdateAsync(TicketUpdateModel model);

@@ -11,5 +11,6 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries.Interfaces
     {
         Task<List<Ticket?>> GetAllAsync();
         Task<Ticket?> GetByIdAsync(int id);
+        Task<Ticket?> GetByGuidAsync(string guid);
     }
 }

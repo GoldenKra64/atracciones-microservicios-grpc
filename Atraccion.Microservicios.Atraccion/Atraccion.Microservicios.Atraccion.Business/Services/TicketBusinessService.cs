@@ -1,4 +1,5 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Atraccion.Microservicios.Atraccion.Business.Mappers;
 using Atraccion.Microservicios.Atraccion.Business.Validators;
@@ -49,6 +50,13 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
         {
             var data = await _dataService.GetByIdAsync(id);
             return TicketBusinessMapper.ToResponseNoHorario(data);
+        }
+
+        public async Task<HorarioDto> GetHorariosByTicketAsync(string guid)
+        {
+            var data = await _dataService.GetByGuidAsync(guid);
+            var ticketData = TicketBusinessMapper.ToResponse(data);
+            return HorarioBusinessMapper.ToResponse(data.Horario);
         }
     }
 }

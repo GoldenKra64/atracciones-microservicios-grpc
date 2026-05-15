@@ -70,6 +70,7 @@ namespace Atraccion.Microservicios.Factura.Api.Middleware
 
             var response = ApiErrorResponse.Fail(
                 message,
+                statusCode,
                 errors,
                 traceId
             );

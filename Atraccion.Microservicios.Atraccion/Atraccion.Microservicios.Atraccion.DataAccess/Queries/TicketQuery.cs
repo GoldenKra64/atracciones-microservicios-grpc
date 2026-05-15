@@ -28,5 +28,10 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries
         {
             return await _context.Tickets.Where(c => c.TicId == id).FirstOrDefaultAsync();
         }
+
+        public async Task<Ticket?> GetByGuidAsync(string id)
+        {
+            return await _context.Tickets.Where(c => c.TicGuid == id).FirstOrDefaultAsync();
+        }
     }
 }

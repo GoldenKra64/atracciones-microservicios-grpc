@@ -1,5 +1,7 @@
 ﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -24,5 +26,8 @@ namespace Atraccion.Microservicios.Atraccion.Business.Interfaces
         Task UpdateAsync(UpdateAtraccionRequest request);
 
         Task LogicalDeleteAsync(string id);
+
+        Task<List<TicketDto>> GetTicketsByAttraction(string guid);
+        Task<List<HorarioDto>> GetHorariosByAttraction(string guid);
     }
 }

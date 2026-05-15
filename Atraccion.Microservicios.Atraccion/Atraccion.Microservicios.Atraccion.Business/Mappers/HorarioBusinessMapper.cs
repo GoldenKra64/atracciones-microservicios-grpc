@@ -1,5 +1,8 @@
 ﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+using Atraccion.Microservicios.Atraccion.DataAccess.Common;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
+using Atraccion.Microservicios.Atraccion.DataManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

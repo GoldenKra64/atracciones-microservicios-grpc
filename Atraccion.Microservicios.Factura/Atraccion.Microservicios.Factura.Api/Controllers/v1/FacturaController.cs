@@ -12,7 +12,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/facturas")]
     public class FacturaController : ControllerBase
     {
         private readonly IFacturaBusinessService _service;
@@ -33,9 +33,9 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
 
             return Ok(ApiResponse<FacturaResponse>.Ok(data));
         }
-        [HttpGet]
+        [HttpGet("mis-facturas")]
         [Authorize(Roles = "CLIENTE")]
-        public async Task<IActionResult> GetByClienteAsync([FromQuery] int page, [FromQuery] int size)
+        public async Task<IActionResult> GetByClienteAsync([FromQuery] int page, [FromQuery] int limit)
         {
             var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -46,7 +46,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
 
             var clienteIdInt = int.Parse(clienteId);
 
-            var data = await _service.GetByClienteAsync(clienteIdInt, page, size);
+            var data = await _service.GetByClienteAsync(clienteIdInt, page, limit);
 
             if (data == null)
                 return NotFound(ApiErrorResponse.Fail("Factura no encontrada"));

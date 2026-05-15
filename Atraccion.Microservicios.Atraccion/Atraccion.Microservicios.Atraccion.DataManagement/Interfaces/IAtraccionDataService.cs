@@ -1,5 +1,6 @@
 ﻿using Atraccion.Microservicios.Atraccion.DataManagement.Models;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using System;
 using System.Collections.Generic;
 using System.Linq;

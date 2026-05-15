@@ -8,9 +8,11 @@ namespace Atraccion.Microservicios.Reserva.Business.DTOs.Reserva
 {
     public class CreateReservaRequest
     {
+        public string at_guid { get; set; }
         public int? ClienteId { get; set; }
         public string hor_guid { get; set; } = null!;
         public string origen_canal { get; set; } = null!;
         public List<DetalleReservaRequest> Lineas { get; set; } = new();
+        public ClienteInvitadoRequest? cliente_invitado { get; set; }
     }
 }

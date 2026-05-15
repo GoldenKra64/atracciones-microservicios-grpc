@@ -12,7 +12,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/reservas")]
     public class ReservaController : ControllerBase
     {
         private readonly IReservaBusinessService _service;
@@ -34,6 +34,21 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
         {
             var data = await _service.GetByClienteAsync(clienteId, page, size);
             return Ok(ApiResponse<PagedResponse<ReservaResponse>>.Ok(data));
+        }
+
+        [HttpGet]
+        [Authorize("CLIENTE")]
+        public async Task<IActionResult> GetMyReservations([FromQuery] int page = 1, [FromQuery] int limit = 10)
+        {
+            var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (clienteId == null)
+            {
+                throw new UnauthorizedBusinessException("Cliente ID is missing");
+            }
+
+            var data = await _service.GetByClienteAsync(int.Parse(clienteId), page, limit);
+            return Ok(ApiResponse<PagedResponse<ReservaResponse>>.Ok(data, "Listado de reservas del cliente"));
         }
 
         [HttpGet]
@@ -63,7 +78,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
             return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva creada y aprobada exitosamente", 201));
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> CreatePublic(CreateReservaRequest request)
         {
             var response = await _service.CreatePublicAsync(request);
@@ -85,7 +100,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
             return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva actualizada exitosamente", 200));
         }
 
-        [HttpPost("{id:guid}/approve")]
+        [HttpPost("{id:guid}/confirmar-pago")]
         public async Task<IActionResult> Approve(string id)
         {
             await _service.ApproveAsync(id);

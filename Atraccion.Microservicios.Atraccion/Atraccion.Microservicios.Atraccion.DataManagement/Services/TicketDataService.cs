@@ -54,5 +54,11 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Services
             var data = await _query.GetByIdAsync(id);
             return TicketMapper.ToModel(data);
         }
+
+        public async Task<TicketModel> GetByGuidAsync(string id)
+        {
+            var data = await _query.GetByGuidAsync(id);
+            return TicketMapper.ToModel(data);
+        }
     }
 }

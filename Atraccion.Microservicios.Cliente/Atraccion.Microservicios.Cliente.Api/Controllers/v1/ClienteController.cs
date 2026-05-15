@@ -45,7 +45,7 @@ namespace Atraccion.Microservicios.Cliente.Api.Controllers.v1
         }
 
         [HttpGet]
-        [Authorize(Roles = "ADMIN")]
+        // [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAllAsync();

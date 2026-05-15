@@ -1,8 +1,10 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
 // Configurar YARP (Reverse Proxy) usando la configuración en appsettings.json
-builder.Services.AddReverseProxy()
+builder.Services
+    .AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -20,7 +22,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-// Mapear el Reverse Proxy (YARP)
+// Mapear al Reverse Proxy
 app.MapReverseProxy();
 
 app.MapControllers();

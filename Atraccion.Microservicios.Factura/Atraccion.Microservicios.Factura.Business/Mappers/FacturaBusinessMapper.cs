@@ -15,13 +15,16 @@ namespace Atraccion.Microservicios.Factura.Business.Mappers
             return new FacturaResponse
             {
                 Id = model.Id,
-                Guid = model.Guid,
-                Estado = model.Estado,
-                Total = model.Total,
+                fac_guid = model.Guid,
+                estado = model.Estado,
+                total = model.Total,
                 Observacion = model.Observacion,
-                Numero = model.Numero,
-                FechaEmision = model.FechaEmision,
-                OrigenCanal = model.OrigenCanal
+                fac_numero = model.Numero,
+                fecha_emision = model.FechaEmision,
+                OrigenCanal = model.OrigenCanal,
+                rev_codigo = model.RevCodigo,
+                nombre_receptor = model.NombreReceptor,
+                correo_receptor = model.CorreoReceptor
             };
         }
     }

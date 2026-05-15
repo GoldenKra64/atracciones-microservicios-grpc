@@ -1,5 +1,8 @@
 ﻿using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Imagen;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Resena;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +32,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                 PuntoEncuentro = entity.AtPuntoEncuentro,
                 Moneda = entity.AtMoneda,
 
-                /*
                 Destino = entity.Destino != null
                     ? CatalogosMapper.ToModel(entity.Destino)
                     : null!,
@@ -42,7 +44,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                         Descripcion = i.ImgDescripcion
                     }).ToList() ?? new(),
 
-                */
                 Categorias = entity.CategoriaAtracciones?
                     .Select(ca => CatalogosMapper.ToModel(ca.Categoria))
                     .ToList() ?? new(),
@@ -51,7 +52,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                     .Select(ia => CatalogosMapper.ToModel(ia.Idioma))
                     .ToList() ?? new(),
 
-                /*
                 Incluyes = entity.IncluyeAtracciones?
                     .Where(ia => ia.Incluye != null)
                     .Select(ia => CatalogosMapper.ToModel(ia.Incluye))
@@ -75,13 +75,11 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                         Tickets = ia.Ticket?.Select(TicketMapper.ToModel).ToList() ?? new()
                     }).ToList() ?? new(),
 
-                */
                 TagAtracciones = entity.TagAtracciones?
                     .Where(ta => ta.Tag != null)
                     .Select(ta => CatalogosMapper.ToModel(ta.Tag))
                     .ToList() ?? new(),
 
-                /*
                 Resena = entity.Resena?
                     .Select(r => new ResenaModel
                     {
@@ -91,7 +89,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                         Fecha = r.ResenaFechaCreacion.ToShortDateString(),
                         ClienteId = r.CliId
                     }).ToList() ?? new(),
-                */
             };
         }
 
@@ -117,9 +114,9 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
             };
 
             entity.CategoriaAtracciones = (model.CategoriaIds ?? Enumerable.Empty<int>()).Select(cateId => new CategoriaAtraccion { CatId = cateId, Atraccion = entity }).ToList();
-            // entity.IncluyeAtracciones = (model.IncluyeIds ?? Enumerable.Empty<int>()).Select(incId => new IncluyeAtraccion { IncId = incId, Atraccion = entity }).ToList();
+            entity.IncluyeAtracciones = (model.IncluyeIds ?? Enumerable.Empty<int>()).Select(incId => new IncluyeAtraccion { IncId = incId, Atraccion = entity }).ToList();
             entity.IdiomaAtracciones = (model.IdiomaIds ?? Enumerable.Empty<int>()).Select(idiId => new IdiomaAtraccion { IdId = idiId, Atraccion = entity }).ToList();
-            // entity.NoIncluyeAtracciones = (model.NoIncluyeIds ?? Enumerable.Empty<int>()).Select(noIncId => new NoIncluyeAtraccion { NoIncId = noIncId, Atraccion = entity }).ToList();
+            entity.NoIncluyeAtracciones = (model.NoIncluyeIds ?? Enumerable.Empty<int>()).Select(noIncId => new NoIncluyeAtraccion { NoIncId = noIncId, Atraccion = entity }).ToList();
             entity.TagAtracciones = (model.TagIds ?? Enumerable.Empty<int>()).Select(tagId => new TagAtraccion { TagId = tagId, Atraccion = entity }).ToList();
 
             return entity;
@@ -182,7 +179,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
             }
 
             // Incluye
-            /*
+            
             var nuevosIncIds = model.IncluyeIds ?? Enumerable.Empty<int>();
 
             entity.IncluyeAtracciones
@@ -225,7 +222,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                     });
                 }
             }
-            */
 
             // Tag
             var nuevosTagIds = model.TagIds ?? Enumerable.Empty<int>();
@@ -249,7 +245,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                 }
             }
 
-            /*
             entity.CategoriaAtracciones = (model.CategoriaIds ?? Enumerable.Empty<int>())
                 .Select(cateId => new CategoriaAtraccion { CatId = cateId, AtId = entity.AtId })
                 .ToList();
@@ -267,7 +262,6 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
 
             entity.TagAtracciones = (model.TagIds ?? Enumerable.Empty<int>())
                 .Select(entityId => new TagAtraccion { TagId = entityId, AtId = entity.AtId }).ToList();
-            */
         }
 
         public static AtraccionTypeModel ToTypeModel(Atraccion.DataAccess.Entities.Atraccion atraccion)

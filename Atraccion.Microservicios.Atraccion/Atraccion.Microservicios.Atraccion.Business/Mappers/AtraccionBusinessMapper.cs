@@ -1,8 +1,14 @@
 ﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Resena;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,7 +89,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 IncluyeAcompaniante = model.IncluyeAcompaniante,
                 IncluyeTransporte = model.IncluyeTransporte,
 
-                // Destino = DestinoBusinessMapper.ToResponse(model.Destino),
+                Destino = DestinoBusinessMapper.ToResponse(model.Destino),
 
                 Categorias = model.Categorias
                     .Select(CatalogosBusinessMapper.ToResponse)
@@ -92,7 +98,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 Idiomas = model.Idiomas
                     .Select(CatalogosBusinessMapper.ToResponse)
                     .ToList(),
-                /*
+                
                 Incluyes = model.Incluyes
                     .Select(IncluyeBusinessMapper.ToResponse)
                     .ToList(),
@@ -100,7 +106,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 NoIncluyes = model.NoIncluyes
                     .Select(NoIncluyeBusinessMapper.ToResponse)
                     .ToList(),
-                */
+                
                 TagAtracciones = model.TagAtracciones
                     .Select(CatalogosBusinessMapper.ToResponse)
                     .ToList()
@@ -109,7 +115,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
         }
         public static ListadoAtracciones ToResponse(AtraccionModel model)
         {
-            /*
+            
             var destinoNombre = model.Destino?.Nombre ?? string.Empty;
             var destinoPais = model.Destino?.Pais ?? string.Empty;
 
@@ -118,7 +124,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             var totalResenias = resenas.Count;
             var calificacion = totalResenias > 0 ? resenas.Average(r => r.Calificacion) : 0.0;
 
-            var horarios = model.Horarios ?? new List<Atracciones.Backend.DataManagement.Models.Horario.HorarioModel>();
+            var horarios = model.Horarios ?? new List<HorarioModel>();
             var cuposDisponibles = horarios.Sum(h => h?.Cupos ?? 0);
             var disponible = horarios.Any(h => (h?.Cupos ?? 0) > 0);
 
@@ -137,7 +143,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 .Select(d => d.Value.ToString("yyyy-MM-dd"))
                 .FirstOrDefault();
 
-            */
+            
             var tipoNombre = model.Categorias?.FirstOrDefault()?.Nombre ?? string.Empty;
             var tipoTagname = model.TagAtracciones?.FirstOrDefault()?.Nombre ?? string.Empty;
 
@@ -146,7 +152,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList() ?? new List<string>();
 
-            //var imagenPrincipal = model.Imagenes?.FirstOrDefault(i => !string.IsNullOrEmpty(i.Url))?.Url;
+            var imagenPrincipal = model.Imagenes?.FirstOrDefault(i => !string.IsNullOrEmpty(i.Url))?.Url;
 
             return new ListadoAtracciones
             {
@@ -155,13 +161,13 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 descripcion_corta = model.Descripcion,
                 precio_desde = model.PrecioReferencia,
                 moneda = model.Moneda ?? "USD",
-                //ciudad = destinoNombre,
-                //total_resenias = totalResenias,
-                //calificacion = calificacion,
+                ciudad = destinoNombre,
+                total_resenias = totalResenias,
+                calificacion = calificacion,
                 idiomas_disponibles = model.Idiomas?.Select(i => i.Nombre).Where(n => !string.IsNullOrWhiteSpace(n)).ToList() ?? new List<string>(),
-                //cupos_disponibles = cuposDisponibles,
-                //disponible = disponible,
-                /*
+                cupos_disponibles = cuposDisponibles,
+                disponible = disponible,
+                
                 disponible_hoy = horarios.Any(h =>
                 {
                     if (h == null) return false;
@@ -170,13 +176,13 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                     return dt == nowDate;
                 }),
                 proxima_fecha_disponible = proximaFecha,
-                */
+                
                 tipo_nombre = tipoNombre,
                 tipo_tagname = tipoTagname,
-                //pais = destinoPais,
+                pais = destinoPais,
                 etiquetas = etiquetas,
                 duracion_minutos = model.DuracionMinutos ?? 0,
-                //imagen_principal = imagenPrincipal
+                imagen_principal = imagenPrincipal
             };
         }
         public static FiltroModel ToFilterModel(FiltroDto request)
@@ -207,10 +213,10 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 incluye_transporte = model.IncluyeTransporte,
                 incluye_acompaniante = model.IncluyeAcompaniante,
                 punto_encuentro = model.PuntoEncuentro,
-                //imagenes = model.Imagenes?.Select(i => i.Url).Where(url => !string.IsNullOrEmpty(url)).ToList() ?? new List<string>(),
-                //incluye = model.Incluyes?.Select(i => i.Descripcion).Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>(),
-                //no_incluye = model.NoIncluyes?.Select(i => i.Descripcion).Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>(),
-                /*horarios_proximos = model.Horarios?.Select(h => new HorarioDto
+                imagenes = model.Imagenes?.Select(i => i.Url).Where(url => !string.IsNullOrEmpty(url)).ToList() ?? new List<string>(),
+                incluye = model.Incluyes?.Select(i => i.Descripcion).Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>(),
+                no_incluye = model.NoIncluyes?.Select(i => i.Descripcion).Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>(),
+                horarios_proximos = model.Horarios?.Select(h => new HorarioDto
                 {
                     AtraccionId = h.AtraccionId,
                     HorarioId = h.HorarioId,
@@ -229,7 +235,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                         Precio = t.Precio,
                         Moneda = model.Moneda ?? "USD"
                     }).ToList() ?? new List<TicketDto>(),
-                */
+                
                 Links = new LinksDto
                 {
                     Self = $"/api/atracciones/{model.Guid}",
@@ -244,6 +250,33 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 Id = model.Id,
                 Name = model.Nombre
             };
+        }
+
+        public static List<TicketDto> MapTicketsToResponse(AtraccionModel model)
+        {
+            return model.Horarios?.SelectMany(h => h.Tickets ?? new List<TicketModel>())
+                .Select(t => new TicketDto
+                {
+                    HorId = t.HorarioId,
+                    TckGuid = t.Guid,
+                    Tipo = t.Tipo,
+                    Precio = t.Precio,
+                    Moneda = model.Moneda ?? "USD"
+                }).ToList() ?? new List<TicketDto>();
+        }
+
+        public static List<HorarioDto> MapHorariosToResponse(AtraccionModel model)
+        {
+            return model.Horarios?.Select(h => new HorarioDto
+            {
+                AtraccionId = h.AtraccionId,
+                HorarioId = h.HorarioId,
+                HorarioGuid = h.HorarioGuid,
+                Cupos = h.Cupos,
+                Fecha = h.Fecha,
+                HoraInicio = h.HoraInicio,
+                HoraFin = h.HoraFin
+            }).ToList() ?? new List<HorarioDto>();
         }
     }
 }

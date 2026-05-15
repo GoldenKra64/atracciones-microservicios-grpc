@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +21,8 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Entities
         public string? FacObservacion { get; set; }
         public string? FacOrigenCanal { get; set; }
 
+        public string? FacNombreReceptor { get; set; }
+        public string? FacCorreoReceptor { get; set; }
         public string FacEstado { get; set; } = null!;
 
         public string? FacUsuarioIngreso { get; set; }

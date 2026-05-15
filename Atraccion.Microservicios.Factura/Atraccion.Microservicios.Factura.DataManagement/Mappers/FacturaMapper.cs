@@ -20,7 +20,10 @@ namespace Atraccion.Microservicios.Factura.DataManagement.Mappers
                 Numero = entity.FacNumero,
                 FechaEmision = entity.FacFechaEmision.ToShortDateString(),
                 OrigenCanal = entity.FacOrigenCanal,
-                Observacion = entity.FacObservacion
+                Observacion = entity.FacObservacion,
+                RevCodigo = entity.RevId,
+                NombreReceptor = entity.FacNombreReceptor,
+                CorreoReceptor = entity.FacCorreoReceptor
             };
         }
     }

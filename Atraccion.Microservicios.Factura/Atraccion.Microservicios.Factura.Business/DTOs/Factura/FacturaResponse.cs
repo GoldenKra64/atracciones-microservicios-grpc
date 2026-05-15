@@ -9,12 +9,15 @@ namespace Atraccion.Microservicios.Factura.Business.DTOs.Factura
     public class FacturaResponse : BaseResponse
     {
         public int Id { get; set; }
-        public string Guid { get; set; }
-        public string Numero { get; set; } = null!;
-        public string FechaEmision { get; set; }
-        public double Total { get; set; }
+        public string fac_guid{ get; set; }
+        public string fac_numero { get; set; } = null!;
+        public int rev_codigo { get; set; }
+        public string fecha_emision { get; set; }
+        public double total { get; set; }
         public string OrigenCanal { get; set; } = null!;
         public string? Observacion { get; set; }
-        public string Estado { get; set; }
+        public string estado { get; set; }
+        public string nombre_receptor { get; set; }
+        public string correo_receptor { get; set; }
     }
 }

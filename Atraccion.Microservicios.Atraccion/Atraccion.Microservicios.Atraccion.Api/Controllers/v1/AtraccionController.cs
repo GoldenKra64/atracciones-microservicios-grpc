@@ -2,7 +2,10 @@
 using Atraccion.Microservicios.Atraccion.Api.Models.Common;
 using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -75,6 +78,21 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         {
             await _service.LogicalDeleteAsync(id);
             return Ok(ApiResponse<string>.Ok("OK"));
+        }
+
+        // Contratos
+        [HttpGet("{guid:guid}/tickets")]
+        public async Task<IActionResult> GetTicketsForAttraction(string guid)
+        {
+            var data = await _service.GetTicketsByAttraction(guid);
+            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Listado de tickets para la atracción"));
+        }
+
+        [HttpGet("{guid:guid}/horarios-disponibles")]
+        public async Task<IActionResult> GetHorariosProximosByAttraction(string guid)
+        {
+            var data = await _service.GetHorariosByAttraction(guid);
+            return Ok(ApiResponse<List<HorarioDto>>.Ok(data, "Listado de cupos con horarios por atracción"));
         }
     }
 }

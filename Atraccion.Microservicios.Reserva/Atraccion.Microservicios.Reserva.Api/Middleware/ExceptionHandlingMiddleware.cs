@@ -1,6 +1,7 @@
 ﻿using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.Exceptions;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 
 namespace Atraccion.Microservicios.Reserva.Api.Middleware
@@ -69,6 +70,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Middleware
             }
 
             var response = ApiErrorResponse.Fail(
+                statusCode,
                 message,
                 errors,
                 traceId
