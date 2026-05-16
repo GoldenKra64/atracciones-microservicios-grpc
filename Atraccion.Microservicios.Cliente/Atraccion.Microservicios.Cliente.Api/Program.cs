@@ -17,6 +17,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddGrpc(); // Agregado para gRPC Server
 
 // ===============================
+// KESTREL (PROTOCOL CONFIGURATION)
+// ===============================
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(80);         // REST on port 80 (HTTP/1.1)
+    options.ListenAnyIPHttp2(5000);  // gRPC on port 5000 (HTTP/2)
+});
+
+// ===============================
 // BUILD
 // ===============================
 var app = builder.Build();
