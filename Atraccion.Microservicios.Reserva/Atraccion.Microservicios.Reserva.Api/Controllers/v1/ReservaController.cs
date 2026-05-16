@@ -12,7 +12,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/reservas")]
+    [Route("api/v{version:apiVersion}/reserva")]
     public class ReservaController : ControllerBase
     {
         private readonly IReservaBusinessService _service;

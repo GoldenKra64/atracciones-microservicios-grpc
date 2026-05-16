@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Factura.Api.Models.Common;
 using Atraccion.Microservicios.Factura.Business.DTOs;
 using Atraccion.Microservicios.Factura.Business.DTOs.Factura;
@@ -12,7 +12,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/facturas")]
+    [Route("api/v{version:apiVersion}/factura")]
     public class FacturaController : ControllerBase
     {
         private readonly IFacturaBusinessService _service;
