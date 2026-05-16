@@ -21,7 +21,9 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
                 RevId = dto.RevId,
                 CliId = dto.CliId,
                 Total = dto.Total,
-                Canal = dto.Canal
+                Canal = dto.Canal,
+                NombreReceptor = dto.NombreReceptor ?? string.Empty,
+                CorreoReceptor = dto.CorreoReceptor ?? string.Empty
             });
         }
     }

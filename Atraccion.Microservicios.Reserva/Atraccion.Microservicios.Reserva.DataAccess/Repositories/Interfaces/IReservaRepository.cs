@@ -14,5 +14,6 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Repositories.Interfaces
         Task SoftDeleteAsync(string id);
         Task DeleteDetalleAsync(DetalleReserva detalle);
         Task ApproveAsync(string id);
+        Task CancelAsync(string id);
     }
 }

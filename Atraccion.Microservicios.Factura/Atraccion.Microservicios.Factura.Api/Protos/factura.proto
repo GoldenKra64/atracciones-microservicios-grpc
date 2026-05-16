@@ -13,6 +13,8 @@ message GenerateInvoiceRequest {
   int32 cliId = 2;
   double total = 3;
   string canal = 4;
+  optional string nombreReceptor = 5;
+  optional string correoReceptor = 6;
 }
 
 message GenerateInvoiceResponse {

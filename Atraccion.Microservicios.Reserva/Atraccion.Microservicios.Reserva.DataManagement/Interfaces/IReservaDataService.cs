@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.DataManagement.Models;
+using Atraccion.Microservicios.Reserva.DataManagement.Models;
 using Atraccion.Microservicios.Reserva.DataManagement.Models.Reserva;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Interfaces
         Task<DataPagedResult<ReservaModel>> GetByClienteAsync(int clienteId, int page, int size);
         Task<ReservaModel?> UpdateAsync(UpdateReservaModel model);
         Task SoftDeleteAsync(string id);
-        Task ApproveAsync(string id);
+        Task CancelAsync(string id);
+        Task ApproveAsync(string id, string? nombreReceptor, string? correoReceptor);
     }
 }

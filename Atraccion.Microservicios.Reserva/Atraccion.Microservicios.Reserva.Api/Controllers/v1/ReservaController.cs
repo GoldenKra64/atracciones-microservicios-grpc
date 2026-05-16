@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
@@ -22,7 +22,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
             _service = service;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(string id)
         {
             var data = await _service.GetByIdAsync(id);
@@ -51,7 +51,8 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
             return Ok(ApiResponse<PagedResponse<ReservaResponse>>.Ok(data, "Listado de reservas del cliente"));
         }
 
-        [HttpGet]
+        [HttpGet("all")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAllAsync();
@@ -59,30 +60,29 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
         }
 
 
-        [HttpPost("cliente")]
-        [Authorize(Roles = "CLIENTE")]
+        [HttpPost]
         public async Task<IActionResult> Create(CreateReservaRequest request)
         {
-            var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var clienteIdStr = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (clienteId == null)
+            if (!string.IsNullOrEmpty(clienteIdStr))
             {
-                throw new UnauthorizedBusinessException("Cliente ID is missing");
+                // Con JWT
+                request.ClienteId = int.Parse(clienteIdStr);
+                var response = await _service.CreateAsync(request);
+                response = await _service.GetByIdAsync(response.rev_guid);
+                return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva creada y aprobada exitosamente", 201));
             }
-
-            request.ClienteId = int.Parse(clienteId);
-            var response = await _service.CreateAsync(request);
-
-            response = await _service.GetByIdAsync(response.rev_guid);
-
-            return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva creada y aprobada exitosamente", 201));
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreatePublic(CreateReservaRequest request)
-        {
-            var response = await _service.CreatePublicAsync(request);
-            return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva y Factura creadas exitosamente", 201));
+            else
+            {
+                // Sin JWT
+                if (request.cliente_invitado == null)
+                {
+                    return BadRequest(new { error = "El cliente_invitado es obligatorio si no se provee token." });
+                }
+                var response = await _service.CreatePublicAsync(request);
+                return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva y Factura creadas exitosamente", 201));
+            }
         }
 
         [HttpDelete("{id:guid}")]
@@ -101,10 +101,17 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
         }
 
         [HttpPost("{id:guid}/confirmar-pago")]
-        public async Task<IActionResult> Approve(string id)
+        public async Task<IActionResult> Approve(string id, [FromBody] ConfirmarPagoRequest request)
         {
-            await _service.ApproveAsync(id);
+            await _service.ApproveAsync(id, request);
             return Ok(ApiResponse<string>.Ok(null, "Reserva y Factura generadas exitosamente", 200));
+        }
+
+        [HttpPut("{id:guid}/cancelar")]
+        public async Task<IActionResult> Cancelar(string id, [FromBody] CancelarReservaRequest request)
+        {
+            await _service.CancelarAsync(id, request);
+            return Ok(ApiResponse<string>.Ok(null, "Reserva cancelada exitosamente", 200));
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
             var data = await _service.GetByReservaAsync(reservaId);
 
             if (data == null)
-                return NotFound(ApiErrorResponse.Fail("Factura no encontrada"));
+                return NotFound(ApiErrorResponse.Fail("Factura no encontrada", 404));
 
             return Ok(ApiResponse<FacturaResponse>.Ok(data));
         }
@@ -49,7 +49,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
             var data = await _service.GetByClienteAsync(clienteIdInt, page, limit);
 
             if (data == null)
-                return NotFound(ApiErrorResponse.Fail("Factura no encontrada"));
+                return NotFound(ApiErrorResponse.Fail("Factura no encontrada", 404));
 
             return Ok(ApiResponse<PagedResponse<FacturaResponse>>.Ok(data));
         }
@@ -61,7 +61,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
             var data = await _service.GetAllFacturasAsync();
 
             if (data == null)
-                return NotFound(ApiErrorResponse.Fail("Facturas no encontradas"));
+                return NotFound(ApiErrorResponse.Fail("Facturas no encontradas", 404));
 
             return Ok(ApiResponse<List<FacturaResponse>>.Ok(data));
         }

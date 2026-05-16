@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +12,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
         public int CliId { get; set; }
         public double Total { get; set; }
         public string Canal { get; set; }
+        public string? NombreReceptor { get; set; }
+        public string? CorreoReceptor { get; set; }
     }
 }

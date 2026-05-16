@@ -12,7 +12,7 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Entities
         public string FacGuid { get; set; }
 
         public int RevId { get; set; }
-        public int CliId { get; set; }
+        public int? CliId { get; set; }
 
         public string FacNumero { get; set; } = null!;
         public DateTime FacFechaEmision { get; set; }

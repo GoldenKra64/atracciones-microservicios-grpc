@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.Business.DTOs;
+using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
 using Atraccion.Microservicios.Reserva.Business.Exceptions;
 using Atraccion.Microservicios.Reserva.Business.Interfaces;
@@ -107,9 +107,14 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
             return ReservaBusinessMapper.ToResponse(data);
         }
 
-        public async Task ApproveAsync(string id)
+        public async Task CancelarAsync(string id, CancelarReservaRequest request)
         {
-            await _dataService.ApproveAsync(id);
+            await _dataService.CancelAsync(id);
+        }
+
+        public async Task ApproveAsync(string id, ConfirmarPagoRequest request)
+        {
+            await _dataService.ApproveAsync(id, request?.nombre_receptor, request?.correo_receptor);
         }
     }
 }

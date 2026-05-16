@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Auth.Business.Common;
+﻿using Atraccion.Microservicios.Auth.Business.Common;
 using Atraccion.Microservicios.Auth.Business.DTOs;
 using Atraccion.Microservicios.Auth.Business.DTOs.Usuario;
 using Atraccion.Microservicios.Auth.Business.Exceptions;
@@ -81,7 +81,7 @@ namespace Atraccion.Microservicios.Auth.Business.Services
             if (data == null)
                 throw new UnauthorizedBusinessException("Credenciales inválidas");
 
-            var clienteId = await _clienteIntegration.GetByUsuarioAsync(data.Id);   // Arreglar
+            var clienteId = await _clienteIntegration.GetByUsuarioAsync(data.Id);
 
             var token = GenerateJwt.GenerateJwtToken(_jwtSettings, data.Login, data.Roles, clienteId);
 

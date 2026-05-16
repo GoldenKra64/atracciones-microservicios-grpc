@@ -9,21 +9,46 @@ namespace Atraccion.Microservicios.Factura.Api.Grpc
     public class FacturaGrpcService : FacturaService.FacturaServiceBase
     {
         private readonly IFacturaRepository _repo;
+        private readonly Atraccion.Microservicios.Factura.DataManagement.Protos.ClienteService.ClienteServiceClient _clienteClient;
 
-        public FacturaGrpcService(IFacturaRepository repo)
+        public FacturaGrpcService(IFacturaRepository repo, Atraccion.Microservicios.Factura.DataManagement.Protos.ClienteService.ClienteServiceClient clienteClient)
         {
             _repo = repo;
+            _clienteClient = clienteClient;
         }
 
         public override async Task<GenerateInvoiceResponse> GenerateInvoice(GenerateInvoiceRequest request, ServerCallContext context)
         {
             try
             {
+                string nombreReceptor = request.NombreReceptor;
+                string correoReceptor = request.CorreoReceptor;
+
+                if (string.IsNullOrEmpty(nombreReceptor) && request.CliId > 0)
+                {
+                    try 
+                    {
+                        var clienteReq = new Atraccion.Microservicios.Factura.DataManagement.Protos.ClienteRequest { CliId = request.CliId };
+                        var clienteRes = await _clienteClient.GetClienteByIdAsync(clienteReq);
+                        if (clienteRes != null)
+                        {
+                            nombreReceptor = $"{clienteRes.Nombres} {clienteRes.Apellidos}".Trim();
+                            correoReceptor = clienteRes.Correo;
+                        }
+                    } 
+                    catch (Exception)
+                    {
+                        // Log fallback error if needed
+                    }
+                }
+
                 var factura = new DataAccess.Entities.Factura
                 {
                     FacGuid = Guid.NewGuid().ToString(),
                     RevId = request.RevId,
                     CliId = request.CliId,
+                    FacNombreReceptor = nombreReceptor,
+                    FacCorreoReceptor = correoReceptor,
                     FacNumero = $"FAC-{DateTime.Now:yyyyMMddHHmmss}-{new Random().Next(100, 999)}",
                     FacFechaEmision = DateTime.UtcNow,
                     FacTotal = (decimal)request.Total,

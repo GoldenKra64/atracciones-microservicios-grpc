@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.Business.DTOs;
+using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace Atraccion.Microservicios.Reserva.Business.Interfaces
         Task<ReservaResponse> UpdateAsync(UpdateReservaRequest request);
 
         Task LogicalDeleteAsync(string id);
-        Task ApproveAsync(string id);
+        Task CancelarAsync(string id, CancelarReservaRequest request);
+        Task ApproveAsync(string id, ConfirmarPagoRequest request);
     }
 }

@@ -69,5 +69,18 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Repositories
                 .Take(size)
                 .ToListAsync();
         }
+
+        public async Task CancelAsync(string id)
+        {
+            var reserva = await _context.Reservas
+                .Include(r => r.Detalles)
+                .FirstOrDefaultAsync(r => r.RevGuid == id);
+
+            if (reserva == null) return;
+
+            reserva.RevEstado = "ANU";
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

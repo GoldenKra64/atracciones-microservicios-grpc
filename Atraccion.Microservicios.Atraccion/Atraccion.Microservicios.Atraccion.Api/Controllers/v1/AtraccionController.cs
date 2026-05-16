@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Atraccion.Api.Models.Common;
 using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
@@ -23,7 +23,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
             _service = service;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(string id)
         {
             var data = await _service.GetByIdAsync(id);
@@ -44,6 +44,13 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         {
             var data = await _service.GetPagedAsync(filtro);
             return Ok(ApiResponse<PagedResponse<ListadoAtracciones>>.Ok(data, "Listado de atracciones obtenido exitosamente"));
+        }
+
+        [HttpGet("filtros")]
+        public async Task<IActionResult> GetFiltros()
+        {
+            var data = await _service.GetFiltrosAsync();
+            return Ok(ApiResponse<FiltrosDisponiblesDto>.Ok(data, "Filtros disponibles obtenidos exitosamente"));
         }
 
         [HttpGet("internal/{id:guid}")]

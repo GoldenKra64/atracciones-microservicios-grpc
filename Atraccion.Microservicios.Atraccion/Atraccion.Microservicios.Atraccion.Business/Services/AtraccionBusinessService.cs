@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
+using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
@@ -78,6 +78,12 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
         public async Task LogicalDeleteAsync(string id)
         {
             await _dataService.SoftDeleteAsync(id);
+        }
+
+        public async Task<FiltrosDisponiblesDto> GetFiltrosAsync()
+        {
+            // TODO: Implementar lógica de obtención de filtros
+            return new FiltrosDisponiblesDto();
         }
 
         public async Task<List<AtraccionTypeResponse>> GetAtraccionType()

@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.DataAccess.Entities;
+using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using Atraccion.Microservicios.Reserva.DataAccess.Queries.Interfaces;
 using Atraccion.Microservicios.Reserva.DataManagement.Integrations;
 using Atraccion.Microservicios.Reserva.DataManagement.Interfaces;
@@ -115,7 +115,10 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                         RevId = id,
                         CliId = entity.CliId ?? 0,
                         Canal = entity.RevCanal,
-                        Total = entity.RevTotal
+                        Total = entity.RevTotal,
+                        // Para CreateAsync que genera factura (isPublic = false) no tenemos receptor específico aquí
+                        NombreReceptor = null,
+                        CorreoReceptor = null
                     });
                 }
 
@@ -135,7 +138,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
             await _uow.ReservaRepository.SoftDeleteAsync(reservaId);
         }
 
-        public async Task ApproveAsync(string id)
+        public async Task ApproveAsync(string id, string? nombreReceptor, string? correoReceptor)
         {
             await _uow.BeginTransactionAsync();
             try
@@ -174,7 +177,9 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                     RevId = entity.RevId,
                     CliId = entity.CliId ?? 0,
                     Canal = entity.RevCanal,
-                    Total = entity.RevTotal
+                    Total = entity.RevTotal,
+                    NombreReceptor = nombreReceptor,
+                    CorreoReceptor = correoReceptor
                 });
 
                 await _uow.CommitAsync();
@@ -278,6 +283,11 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 await _uow.RollbackAsync();
                 throw;
             }
+        }
+
+        public async Task CancelAsync(string id)
+        {
+            await _uow.ReservaRepository.CancelAsync(id);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Factura.Business.DTOs;
+using Atraccion.Microservicios.Factura.Business.DTOs;
 using Atraccion.Microservicios.Factura.Business.Interfaces;
 using Atraccion.Microservicios.Factura.Business.Services;
 using Atraccion.Microservicios.Factura.DataAccess.Context;
@@ -49,6 +49,14 @@ namespace Atraccion.Microservicios.Factura.Api.Extensions
             // ===============================
             services.AddScoped<IFacturaBusinessService, FacturaBusinessService>();
 
+
+            // ===============================
+            // GRPC CLIENTS
+            // ===============================
+            services.AddGrpcClient<Atraccion.Microservicios.Factura.DataManagement.Protos.ClienteService.ClienteServiceClient>(o =>
+            {
+                o.Address = new Uri(configuration["GrpcUrls:ClienteUrl"] ?? "https://localhost:7119");
+            });
 
             return services;
         }
