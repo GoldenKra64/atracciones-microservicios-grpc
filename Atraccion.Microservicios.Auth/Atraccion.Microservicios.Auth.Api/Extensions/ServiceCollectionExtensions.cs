@@ -59,7 +59,7 @@ namespace Atraccion.Microservicios.Auth.Api.Extensions
             // ===============================
             services.AddGrpcClient<Atraccion.Microservicios.Auth.DataManagement.Protos.ClienteService.ClienteServiceClient>(o =>
             {
-                o.Address = new Uri(configuration["GrpcUrls:Cliente"] ?? "https://localhost:7229");
+                o.Address = new Uri(configuration["GrpcUrls:Cliente:BaseUrl"] ?? "https://localhost:7229");
             });
 
             services.AddScoped<IClienteIntegration, Atraccion.Microservicios.Auth.DataManagement.Integrations.ClienteIntegrationGrpc>();
