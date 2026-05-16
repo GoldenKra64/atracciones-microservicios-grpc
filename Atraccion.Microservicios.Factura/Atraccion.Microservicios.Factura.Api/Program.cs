@@ -1,5 +1,6 @@
 using Atraccion.Microservicios.Factura.Api.Extensions;
 using Atraccion.Microservicios.Factura.Api.Middleware;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 

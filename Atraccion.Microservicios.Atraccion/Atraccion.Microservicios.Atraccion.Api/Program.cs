@@ -1,6 +1,7 @@
 using Atraccion.Microservicios.Atraccion.Api.Extensions;
 using Atraccion.Microservicios.Atraccion.Api.Middleware;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
