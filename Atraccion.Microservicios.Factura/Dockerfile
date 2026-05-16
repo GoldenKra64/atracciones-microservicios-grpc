@@ -16,7 +16,6 @@ WORKDIR /src
 
 COPY --from=build /publish .
 
-ENV ASPNETCORE_URLS=http://+:${PORT}
-
+ENV ASPNETCORE_URLS=http://+:80;http://+:5000
 
 ENTRYPOINT ["dotnet", "Atraccion.Microservicios.Factura.Api.dll"]
