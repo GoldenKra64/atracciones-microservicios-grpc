@@ -10,7 +10,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/ticket")]
+    [Route("api/v{version:apiVersion}/tickets")]
     public class TicketController : ControllerBase
     {
         private readonly ITicketBusinessService _service;

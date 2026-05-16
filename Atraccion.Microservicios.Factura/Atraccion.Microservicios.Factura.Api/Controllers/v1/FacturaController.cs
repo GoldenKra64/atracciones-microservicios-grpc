@@ -12,7 +12,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/factura")]
+    [Route("api/v{version:apiVersion}/facturas")]
     public class FacturaController : ControllerBase
     {
         private readonly IFacturaBusinessService _service;
