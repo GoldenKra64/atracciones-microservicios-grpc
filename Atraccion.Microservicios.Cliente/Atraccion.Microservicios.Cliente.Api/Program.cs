@@ -1,5 +1,6 @@
-using Atraccion.Microservicios.Cliente.Api.Extensions;
+﻿using Atraccion.Microservicios.Cliente.Api.Extensions;
 using Atraccion.Microservicios.Cliente.Api.Middleware;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,12 @@ builder.Services.AddGrpc(); // Agregado para gRPC Server
 // ===============================
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(80);         // REST on port 80 (HTTP/1.1)
-    options.ListenAnyIPHttp2(5000);  // gRPC on port 5000 (HTTP/2)
+    options.ListenAnyIP(80);
+
+    options.ListenAnyIP(5000, o =>
+    {
+        o.Protocols = HttpProtocols.Http2;
+    });
 });
 
 // ===============================

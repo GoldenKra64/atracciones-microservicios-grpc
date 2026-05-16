@@ -55,7 +55,7 @@ namespace Atraccion.Microservicios.Factura.Api.Extensions
             // ===============================
             services.AddGrpcClient<Atraccion.Microservicios.Factura.DataManagement.Protos.ClienteService.ClienteServiceClient>(o =>
             {
-                o.Address = new Uri(configuration["GrpcUrls:ClienteUrl"] ?? "https://localhost:7119");
+                o.Address = new Uri(configuration["GrpcUrls:ClienteUrl:BaseUrl"] ?? "https://localhost:7119");
             });
 
             return services;

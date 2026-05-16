@@ -59,12 +59,12 @@ namespace Atraccion.Microservicios.Reserva.Api.Extensions
             // ===============================
             services.AddGrpcClient<Atraccion.Microservicios.Reserva.DataManagement.Protos.AtraccionService.AtraccionServiceClient>(o =>
             {
-                o.Address = new Uri(configuration["GrpcUrls:Atraccion"] ?? "https://localhost:7143");
+                o.Address = new Uri(configuration["GrpcUrls:Atraccion:BaseUrl"] ?? "https://localhost:7143");
             });
 
             services.AddGrpcClient<Atraccion.Microservicios.Reserva.DataManagement.Protos.FacturaService.FacturaServiceClient>(o =>
             {
-                o.Address = new Uri(configuration["GrpcUrls:Factura"] ?? "https://localhost:7289");
+                o.Address = new Uri(configuration["GrpcUrls:Factura:BaseUrl"] ?? "https://localhost:7289");
             });
 
             services.AddScoped<IAtraccionIntegration, Atraccion.Microservicios.Reserva.DataManagement.Integrations.AtraccionIntegrationGrpc>();
