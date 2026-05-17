@@ -9,7 +9,7 @@ builder.Services
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("CorsPolicy", policy =>
     {
         policy
             .AllowAnyOrigin()
@@ -28,7 +28,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 
 app.UseRouting();
-app.UseCors("AllowFrontend");
+app.UseCors("CorsPolicy");
 
 // Mapear al Reverse Proxy
 app.MapReverseProxy();
