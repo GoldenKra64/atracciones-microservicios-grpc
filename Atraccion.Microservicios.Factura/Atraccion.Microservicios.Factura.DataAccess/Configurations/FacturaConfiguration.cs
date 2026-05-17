@@ -22,6 +22,7 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Configurations
             builder.Property(e => e.FacGuid).HasColumnName("fac_guid");
 
             builder.Property(e => e.RevId).HasColumnName("rev_id");
+            builder.Property(e => e.CliId).HasColumnName("cli_id");
 
             builder.Property(e => e.FacNumero).HasColumnName("fac_numero");
             builder.Property(e => e.FacFechaEmision).HasColumnName("fac_fecha_emision");
@@ -30,6 +31,9 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Configurations
 
             builder.Property(e => e.FacObservacion).HasColumnName("fac_observacion");
             builder.Property(e => e.FacOrigenCanal).HasColumnName("fac_origen_canal");
+
+            builder.Property(e => e.FacCorreoReceptor).HasColumnName("fac_correo_receptor");
+            builder.Property(e => e.FacNombreReceptor).HasColumnName("fac_nombre_receptor");
 
             builder.Property(e => e.FacUsuarioIngreso).HasColumnName("fac_usuario_ingreso");
             builder.Property(e => e.FacIpIngreso).HasColumnName("fac_ip_ingreso");

@@ -1,4 +1,4 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
@@ -37,7 +37,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
         }
 
         [HttpGet]
-        [Authorize("CLIENTE")]
+        [Authorize(Roles = "CLIENTE")]
         public async Task<IActionResult> GetMyReservations([FromQuery] int page = 1, [FromQuery] int limit = 10)
         {
             var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;

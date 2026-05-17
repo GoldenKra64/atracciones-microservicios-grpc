@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
 {
     [DbContext(typeof(AtraccionesDbContext))]
-    [Migration("20260513210441_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260517040543_FacturaContext")]
+    partial class FacturaContext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,14 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
                         .HasColumnName("fac_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FacId"));
+
+                    b.Property<int?>("CliId")
+                        .HasColumnType("integer")
+                        .HasColumnName("cli_id");
+
+                    b.Property<string>("FacCorreoReceptor")
+                        .HasColumnType("text")
+                        .HasColumnName("fac_correo_receptor");
 
                     b.Property<string>("FacEstado")
                         .IsRequired()
@@ -68,6 +76,10 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
                     b.Property<string>("FacIpMod")
                         .HasColumnType("text")
                         .HasColumnName("fac_ip_mod");
+
+                    b.Property<string>("FacNombreReceptor")
+                        .HasColumnType("text")
+                        .HasColumnName("fac_nombre_receptor");
 
                     b.Property<string>("FacNumero")
                         .IsRequired()

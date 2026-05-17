@@ -32,10 +32,12 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FacId"));
 
                     b.Property<int?>("CliId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("cli_id");
 
                     b.Property<string>("FacCorreoReceptor")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("fac_correo_receptor");
 
                     b.Property<string>("FacEstado")
                         .IsRequired()
@@ -73,7 +75,8 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
                         .HasColumnName("fac_ip_mod");
 
                     b.Property<string>("FacNombreReceptor")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("fac_nombre_receptor");
 
                     b.Property<string>("FacNumero")
                         .IsRequired()

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FacturaContext : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,11 +20,14 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     fac_guid = table.Column<string>(type: "text", nullable: false),
                     rev_id = table.Column<int>(type: "integer", nullable: false),
+                    cli_id = table.Column<int>(type: "integer", nullable: true),
                     fac_numero = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     fac_fecha_emision = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     fac_total = table.Column<decimal>(type: "numeric", nullable: false),
                     fac_observacion = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     fac_origen_canal = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    fac_nombre_receptor = table.Column<string>(type: "text", nullable: true),
+                    fac_correo_receptor = table.Column<string>(type: "text", nullable: true),
                     fac_estado = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     fac_usuario_ingreso = table.Column<string>(type: "text", nullable: true),
                     fac_ip_ingreso = table.Column<string>(type: "text", nullable: true),

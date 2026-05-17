@@ -1,4 +1,4 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Atraccion.Microservicios.Factura.Api.Models.Common;
 using Atraccion.Microservicios.Factura.Business.DTOs;
 using Atraccion.Microservicios.Factura.Business.DTOs.Factura;
@@ -54,7 +54,7 @@ namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
             return Ok(ApiResponse<PagedResponse<FacturaResponse>>.Ok(data));
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetAllAsync()
         {
