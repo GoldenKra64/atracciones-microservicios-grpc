@@ -22,6 +22,7 @@ namespace Atraccion.Microservicios.Factura.DataAccess.Configurations
             builder.Property(e => e.FacGuid).HasColumnName("fac_guid");
 
             builder.Property(e => e.RevId).HasColumnName("rev_id");
+            builder.Property(e => e.CliId).HasColumnName("cli_id");
 
             builder.Property(e => e.FacNumero).HasColumnName("fac_numero");
             builder.Property(e => e.FacFechaEmision).HasColumnName("fac_fecha_emision");
