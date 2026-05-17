@@ -27,9 +27,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
         ForwardedHeaders.XForwardedProto
 });
 
-app.UseCors("AllowFrontend");
 
 app.UseRouting();
+
+app.UseCors("AllowFrontend");
 
 app.UseAuthorization();
 
