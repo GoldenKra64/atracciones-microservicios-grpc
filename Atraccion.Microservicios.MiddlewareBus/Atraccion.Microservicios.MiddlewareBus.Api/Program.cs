@@ -2,14 +2,13 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar YARP (Reverse Proxy) usando la configuración en appsettings.json
 builder.Services
     .AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CorsPolicy", policy =>
+    options.AddDefaultPolicy(policy =>
     {
         policy
             .AllowAnyOrigin()
@@ -27,10 +26,10 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
         ForwardedHeaders.XForwardedProto
 });
 
-app.UseRouting();
-app.UseCors("CorsPolicy");
+app.UseCors();
 
-// Mapear al Reverse Proxy
+app.UseRouting();
+
 app.MapReverseProxy();
 
 app.Run();
