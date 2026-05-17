@@ -20,9 +20,9 @@ builder.Services.AddGrpc(); // Agregado para gRPC Server
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(8080);
+    options.ListenAnyIP(80);
 
-    options.ListenAnyIP(5001, o =>
+    options.ListenAnyIP(5000, o =>
     {
         o.Protocols = HttpProtocols.Http2;
     });

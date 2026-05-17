@@ -16,7 +16,11 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .ConfigureHttpClient((context, handler) =>
+    {
+        handler.AllowAutoRedirect = false;
+    }); ;
 
 var app = builder.Build();
 
