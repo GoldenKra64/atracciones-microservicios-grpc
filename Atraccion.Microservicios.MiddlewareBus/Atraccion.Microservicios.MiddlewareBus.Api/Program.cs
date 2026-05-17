@@ -1,20 +1,36 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.AspNetCore.HttpOverrides;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Configurar YARP (Reverse Proxy) usando la configuración en appsettings.json
 builder.Services
     .AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto
+});
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.UseRouting();
+app.UseCors("AllowFrontend");
 
 // Mapear al Reverse Proxy
 app.MapReverseProxy();
-
-// app.MapControllers();
 
 app.Run();
