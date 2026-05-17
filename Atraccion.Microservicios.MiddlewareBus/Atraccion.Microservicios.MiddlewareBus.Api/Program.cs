@@ -16,7 +16,15 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    .ConfigureHttpClient((context, handler) =>
+    {
+        // Disable automatic redirects so YARP forwards them back to the client
+        // unchanged. Without this, 301/302 redirects (e.g. HTTP→HTTPS) cause
+        // the HttpClient to re-issue the request as GET, producing 405 errors
+        // for POST/PUT/DELETE endpoints.
+        handler.AllowAutoRedirect = false;
+    });
 
 var app = builder.Build();
 
