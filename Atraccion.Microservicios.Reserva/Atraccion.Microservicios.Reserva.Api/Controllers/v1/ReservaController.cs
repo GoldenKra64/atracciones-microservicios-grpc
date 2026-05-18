@@ -100,7 +100,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
             return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva actualizada exitosamente", 200));
         }
 
-        [HttpPost("{id:guid}/confirmar-pago")]
+        [HttpPost("{id:guid}/pagos/confirmacion")]
         public async Task<IActionResult> Approve(string id, [FromBody] ConfirmarPagoRequest request)
         {
             await _service.ApproveAsync(id, request);

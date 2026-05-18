@@ -1,5 +1,6 @@
 using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Filters;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
@@ -80,10 +81,71 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
             await _dataService.SoftDeleteAsync(id);
         }
 
-        public async Task<FiltrosDisponiblesDto> GetFiltrosAsync()
+        public async Task<FiltrosDisponibles> GetFiltrosAsync()
         {
-            // TODO: Implementar lógica de obtención de filtros
-            return new FiltrosDisponiblesDto();
+            var atracciones = await _dataService.GetAllInternalAsync();
+
+            var result = new FiltrosDisponibles();
+
+            // Destination Filters
+            result.destinationFilters = atracciones
+                .Where(a => a?.Destino != null && !string.IsNullOrEmpty(a.Destino.Nombre))
+                .GroupBy(a => a!.Destino.Nombre)
+                .Select(g => new OpcionFiltro
+                {
+                    nombre = g.Key,
+                    tagname = g.Key.ToLower().Replace(" ", "_"),
+                    productCount = g.Count()
+                })
+                .OrderByDescending(o => o.productCount)
+                .ToList();
+
+            // Type Filters
+            result.typeFilters = atracciones
+                .Where(a => a?.Categorias != null)
+                .SelectMany(a => a!.Categorias)
+                .Where(c => !string.IsNullOrEmpty(c.Nombre))
+                .GroupBy(c => c.Nombre)
+                .Select(g => new OpcionFiltro
+                {
+                    nombre = g.Key,
+                    tagname = g.Key.ToLower().Replace(" ", "_"),
+                    productCount = g.Count()
+                })
+                .OrderByDescending(o => o.productCount)
+                .ToList();
+
+            // Label Filters
+            result.labelFilters = atracciones
+                .Where(a => a?.TagAtracciones != null)
+                .SelectMany(a => a!.TagAtracciones)
+                .Where(t => !string.IsNullOrEmpty(t.Nombre))
+                .GroupBy(t => t.Nombre)
+                .Select(g => new OpcionFiltro
+                {
+                    nombre = g.Key,
+                    tagname = g.Key.ToLower().Replace(" ", "_"),
+                    productCount = g.Count()
+                })
+                .OrderByDescending(o => o.productCount)
+                .ToList();
+
+            // Supported Language Filters
+            result.supportedLanguageFilters = atracciones
+                .Where(a => a?.Idiomas != null)
+                .SelectMany(a => a!.Idiomas)
+                .Where(i => !string.IsNullOrEmpty(i.Nombre))
+                .GroupBy(i => i.Nombre)
+                .Select(g => new OpcionFiltro
+                {
+                    nombre = g.Key,
+                    tagname = g.Key.ToLower().Replace(" ", "_"),
+                    productCount = g.Count()
+                })
+                .OrderByDescending(o => o.productCount)
+                .ToList();
+
+            return result;
         }
 
         public async Task<List<AtraccionTypeResponse>> GetAtraccionType()
@@ -108,6 +170,13 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
         {
             var data = await _dataService.GetByIdAsync(guid);
             return AtraccionBusinessMapper.MapHorariosToResponse(data);
+        }
+
+        public async Task<List<TicketDto>> GetTicketsByHorario(string guid, int horarioId)
+        {
+            var data = await _dataService.GetByIdAsync(guid);
+            if (data == null) throw new NotFoundException("Atracción", guid);
+            return AtraccionBusinessMapper.MapTicketsByHorarioToResponse(data, horarioId);
         }
     }
 }

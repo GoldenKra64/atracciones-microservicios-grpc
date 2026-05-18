@@ -1,13 +1,16 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Atraccion.Microservicios.Atraccion.Api.Models.Common;
 using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Resena;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
 {
@@ -17,10 +20,12 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
     public class AtraccionController : ControllerBase
     {
         private readonly IAtraccionBusinessService _service;
+        private readonly IResenaBusinessService _resenaBusinessService;
 
-        public AtraccionController(IAtraccionBusinessService service)
+        public AtraccionController(IAtraccionBusinessService service, IResenaBusinessService resenaBusinessService)
         {
             _service = service;
+            _resenaBusinessService = resenaBusinessService;
         }
 
         [HttpGet("{id:guid}")]
@@ -50,7 +55,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         public async Task<IActionResult> GetFiltros()
         {
             var data = await _service.GetFiltrosAsync();
-            return Ok(ApiResponse<FiltrosDisponiblesDto>.Ok(data, "Filtros disponibles obtenidos exitosamente"));
+            return Ok(ApiResponse<FiltrosDisponibles>.Ok(data, "Filtros disponibles obtenidos exitosamente"));
         }
 
         [HttpGet("internal/{id:guid}")]
@@ -95,11 +100,43 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
             return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Listado de tickets para la atracción"));
         }
 
-        [HttpGet("{guid:guid}/horarios-disponibles")]
+        [HttpGet("{guid:guid}/horarios")]
         public async Task<IActionResult> GetHorariosProximosByAttraction(string guid)
         {
             var data = await _service.GetHorariosByAttraction(guid);
             return Ok(ApiResponse<List<HorarioDto>>.Ok(data, "Listado de cupos con horarios por atracción"));
+        }
+
+        [HttpGet("{guid:guid}/horarios/{horarioId:int}/tickets")]
+        public async Task<IActionResult> GetTicketsPorHorario(string guid, int horarioId)
+        {
+            var data = await _service.GetTicketsByHorario(guid, horarioId);
+            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Tickets disponibles para el horario"));
+        }
+
+        // Resenia contratos
+        [HttpGet("{guid:guid}/resenias")]
+        public async Task<IActionResult> GetReseniasByAtraccion(string guid)
+        {
+            var data = await _resenaBusinessService.GetByAtraccionAsync(guid);
+            return Ok(ApiResponse<IEnumerable<ResenaResponse>>.Ok(data, "Listado de reseñas para la atracción"));
+        }
+
+        [HttpPost("{guid:guid}/resenias")]
+        [Authorize(Roles = "CLIENTE")]
+        public async Task<IActionResult> CreateResena(string guid, CreateResenaRequest request)
+        {
+            var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (clienteId == null)
+            {
+                throw new UnauthorizedBusinessException("Cliente ID is missing");
+            }
+            request.ClienteId = int.Parse(clienteId);
+            request.Comentario = request.Comentario?.Trim();
+            request.AtraccionGuid = guid;
+
+            var data = await _resenaBusinessService.CreateAsync(request);
+            return Ok(ApiResponse<int>.Ok(data, "Reseña creada exitosamente"));
         }
     }
 }

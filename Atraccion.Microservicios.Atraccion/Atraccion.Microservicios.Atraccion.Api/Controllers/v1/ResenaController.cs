@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Atraccion.Api.Models.Common;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Resena;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
@@ -11,7 +11,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/atracciones")]
     public class ResenaController : ControllerBase
     {
         private readonly IResenaBusinessService _service;
@@ -21,16 +21,16 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
             _service = service;
         }
 
-        [HttpGet("atraccion/{id}")]
-        public async Task<IActionResult> GetByAtraccion(string id)
+        [HttpGet("{guid:guid}/resenias")]
+        public async Task<IActionResult> GetByAtraccion(string guid)
         {
-            var data = await _service.GetByAtraccionAsync(id);
+            var data = await _service.GetByAtraccionAsync(guid);
             return Ok(ApiResponse<IEnumerable<ResenaResponse>>.Ok(data));
         }
 
-        [HttpPost]
+        [HttpPost("{guid:guid}/resenias")]
         [Authorize(Roles = "CLIENTE")]
-        public async Task<IActionResult> Create(CreateResenaRequest request)
+        public async Task<IActionResult> Create(string guid, CreateResenaRequest request)
         {
             var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -40,6 +40,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
             }
 
             request.ClienteId = int.Parse(clienteId);
+            request.AtraccionGuid = guid;
 
             var id = await _service.CreateAsync(request);
             return Ok(ApiResponse<int>.Ok(id));

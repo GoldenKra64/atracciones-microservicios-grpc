@@ -18,7 +18,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Interfaces
         Task<PagedResponse<ListadoAtracciones>> GetPagedAsync(
             FiltroDto filtro);
 
-        Task<FiltrosDisponiblesDto> GetFiltrosAsync();
+        Task<FiltrosDisponibles> GetFiltrosAsync();
         Task<List<AtraccionTypeResponse>> GetAtraccionType();
         Task<AtraccionResponse> GetInternalById(string id);
         Task<List<AtraccionResponse>> GetAllInternalAsync();
@@ -30,5 +30,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.Interfaces
 
         Task<List<TicketDto>> GetTicketsByAttraction(string guid);
         Task<List<HorarioDto>> GetHorariosByAttraction(string guid);
+        Task<List<TicketDto>> GetTicketsByHorario(string guid, int horarioId);
     }
 }

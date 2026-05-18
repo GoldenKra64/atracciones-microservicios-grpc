@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
+using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
@@ -263,6 +263,21 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                     Precio = t.Precio,
                     Moneda = model.Moneda ?? "USD"
                 }).ToList() ?? new List<TicketDto>();
+        }
+
+        public static List<TicketDto> MapTicketsByHorarioToResponse(AtraccionModel model, int horarioId)
+        {
+            var horario = model.Horarios?.FirstOrDefault(h => h.HorarioId == horarioId);
+            if (horario == null) return new List<TicketDto>();
+
+            return horario.Tickets?.Select(t => new TicketDto
+            {
+                HorId = t.HorarioId,
+                TckGuid = t.Guid,
+                Tipo = t.Tipo,
+                Precio = t.Precio,
+                Moneda = model.Moneda ?? "USD"
+            }).ToList() ?? new List<TicketDto>();
         }
 
         public static List<HorarioDto> MapHorariosToResponse(AtraccionModel model)

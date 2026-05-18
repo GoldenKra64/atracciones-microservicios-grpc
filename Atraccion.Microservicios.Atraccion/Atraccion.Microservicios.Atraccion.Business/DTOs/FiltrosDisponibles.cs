@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Filters;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +9,12 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs
 {
     public class FiltrosDisponibles
     {
-        public OpcionFiltro destinationFilters;
-        public OpcionFiltro typeFilters;
-        public OpcionFiltro labelFilters;
-        public OpcionFiltro minRatingFilter;
-        public OpcionFiltro timeOfDayFilter;
-        public OpcionFiltro supportedLanguageFilters;
-        public OpcionFiltro ufiFilters;
+        public List<OpcionFiltro> destinationFilters { get; set; } = new List<OpcionFiltro>();
+        public List<OpcionFiltro> typeFilters { get; set; } = new List<OpcionFiltro>();
+        public List<OpcionFiltro> labelFilters { get; set; } = new List<OpcionFiltro>();
+        public List<OpcionFiltro> minRatingFilter { get; set; } = new List<OpcionFiltro>();
+        public List<OpcionFiltro> timeOfDayFilter { get; set; } = new List<OpcionFiltro>();
+        public List<OpcionFiltro> supportedLanguageFilters { get; set; } = new List<OpcionFiltro>();
+        public List<OpcionFiltro> ufiFilters { get; set; } = new List<OpcionFiltro>();
     }
 }
