@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataManagement.Models;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using System;
@@ -17,6 +17,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Interfaces
         Task<AtraccionModel?> GetByIdAsync(string id);
         Task<AtraccionModel?> GetInternalByIdAsync(string id);
         Task<List<AtraccionModel?>> GetAllInternalAsync();
+        Task<int> GetActiveCountAsync();
 
         Task CreateAsync(AtraccionCreateModel model);
 

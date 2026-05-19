@@ -47,8 +47,41 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
         public async Task<IActionResult> GetPaged(
             [FromQuery] FiltroDto? filtro)
         {
-            var data = await _service.GetPagedAsync(filtro);
-            return Ok(ApiResponse<PagedResponse<ListadoAtracciones>>.Ok(data, "Listado de atracciones obtenido exitosamente"));
+            var data = await _service.GetPagedV2Async(filtro);
+            
+            var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+            string? nextPage = data.PageNumber < data.TotalPages 
+                ? $"{requestUrl}?page={data.PageNumber + 1}&limit={data.PageSize}" 
+                : null;
+            string? prevPage = data.PageNumber > 1 
+                ? $"{requestUrl}?page={data.PageNumber - 1}&limit={data.PageSize}" 
+                : null;
+
+            var response = new
+            {
+                status = 200,
+                message = "Consulta exitosa",
+                data = data.Items,
+                pagination = new
+                {
+                    total_records = data.TotalRecords,
+                    limit = filtro.Limit,
+                    page = filtro.Page,
+                    total_pages = data.TotalPages,
+                    next_page = nextPage,
+                    prev_page = prevPage
+                },
+                filterStats = new
+                {
+                    tipo = filtro?.Tipo,
+                    subtipo = filtro?.Subtipo,
+                    precio_max = filtro?.PrecioMax,
+                    precio_min = filtro?.PrecioMin
+                },
+                _links = new { self = requestUrl },
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("filtros")]
@@ -107,8 +140,8 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
             return Ok(ApiResponse<List<HorarioDto>>.Ok(data, "Listado de cupos con horarios por atracción"));
         }
 
-        [HttpGet("{guid:guid}/horarios/{horarioId:int}/tickets")]
-        public async Task<IActionResult> GetTicketsPorHorario(string guid, int horarioId)
+        [HttpGet("{guid:guid}/horarios/{horarioId:guid}/tickets")]
+        public async Task<IActionResult> GetTicketsPorHorario(string guid, string horarioId)
         {
             var data = await _service.GetTicketsByHorario(guid, horarioId);
             return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Tickets disponibles para el horario"));

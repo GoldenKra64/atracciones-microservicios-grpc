@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Common;
+using Atraccion.Microservicios.Atraccion.DataAccess.Common;
 using Atraccion.Microservicios.Atraccion.DataAccess.Context;
 using Atraccion.Microservicios.Atraccion.DataAccess.Queries.Filters;
 using Atraccion.Microservicios.Atraccion.DataAccess.Queries.Interfaces;
@@ -222,6 +222,11 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries
                 .Include(a => a.TagAtracciones)
                     .ThenInclude(ta => ta.Tag)
                  .Where(c => c.AtGuid == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> GetActiveCountAsync()
+        {
+            return await _context.Atracciones.CountAsync(a => a.AtEstado == "ACT");
         }
 
         public async Task<List<Atraccion.DataAccess.Entities.Atraccion?>> GetAllInternalAsync()

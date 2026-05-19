@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Queries.Interfaces;
+using Atraccion.Microservicios.Atraccion.DataAccess.Queries.Interfaces;
 using Atraccion.Microservicios.Atraccion.DataManagement.Interfaces;
 using Atraccion.Microservicios.Atraccion.DataManagement.Mappers;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models;
@@ -81,6 +81,11 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Services
         {
             var model = await _query.GetAllInternalAsync();
             return model.Select(AtraccionMapper.ToModel).ToList();
+        }
+
+        public async Task<int> GetActiveCountAsync()
+        {
+            return await _query.GetActiveCountAsync();
         }
     }
 }

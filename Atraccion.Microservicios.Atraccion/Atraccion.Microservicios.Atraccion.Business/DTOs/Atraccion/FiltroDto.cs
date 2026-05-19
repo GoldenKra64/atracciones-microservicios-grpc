@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +17,10 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion
 
         // ⭐ Rating
         public decimal? CalificacionMin { get; set; }
+
+        // 💰 Precio
+        public decimal? PrecioMin { get; set; }
+        public decimal? PrecioMax { get; set; }
 
         // ⏰ Horario (ej: "05:00-12:00")
         public string? Horario { get; set; }

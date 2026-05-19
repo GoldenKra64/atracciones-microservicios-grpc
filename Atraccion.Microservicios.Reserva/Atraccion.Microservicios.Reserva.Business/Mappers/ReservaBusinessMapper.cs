@@ -31,6 +31,16 @@ namespace Atraccion.Microservicios.Reserva.Business.Mappers
         // 🔹 Model → Response
         public static ReservaResponse ToResponse(ReservaModel model)
         {
+            var links = new Dictionary<string, string>
+            {
+                { "self", $"/api/v2/reservas/{model.rev_guid}" }
+            };
+
+            if (model.rev_estado == "PEN")
+            {
+                links.Add("confirmar_pago", $"/api/v2/reservas/{model.rev_guid}/pagos/confirmacion");
+            }
+
             return new ReservaResponse
             {
                 rev_guid = model.rev_guid,
@@ -58,6 +68,8 @@ namespace Atraccion.Microservicios.Reserva.Business.Mappers
                     precio_unit = d.precio_unit,
                     subtotal = d.subtotal
                 }).ToList(),
+                
+                _links = links
             };
         }
 

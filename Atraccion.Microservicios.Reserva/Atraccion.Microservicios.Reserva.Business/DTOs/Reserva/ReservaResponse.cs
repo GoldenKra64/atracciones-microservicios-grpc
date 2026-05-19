@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +21,8 @@ namespace Atraccion.Microservicios.Reserva.Business.DTOs.Reserva
         public string rev_estado { get; set; } = string.Empty;
         public string rev_fecha_reserva_utc { get; set; } = string.Empty;
         public List<DetalleReservaResponse> detalle { get; set; } = new();
+
+        [System.Text.Json.Serialization.JsonPropertyName("_links")]
+        public Dictionary<string, string> _links { get; set; } = new();
     }
 }

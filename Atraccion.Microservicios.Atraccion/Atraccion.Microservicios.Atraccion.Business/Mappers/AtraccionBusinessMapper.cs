@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Atraccion.Business.DTOs;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
@@ -144,8 +144,14 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 .FirstOrDefault();
 
             
-            var tipoNombre = model.Categorias?.FirstOrDefault()?.Nombre ?? string.Empty;
-            var tipoTagname = model.TagAtracciones?.FirstOrDefault()?.Nombre ?? string.Empty;
+            var parentCat = model.Categorias?.FirstOrDefault(c => c.ParentId == null);
+            var childCat = model.Categorias?.FirstOrDefault(c => c.ParentId != null);
+            
+            var tipoNombre = parentCat?.Nombre ?? string.Empty;
+            var tipoTagname = parentCat?.Guid ?? string.Empty;
+
+            var subtipoNombre = childCat?.Nombre;
+            var subtipoTagname = childCat?.Guid;
 
             var etiquetas = model.TagAtracciones?
                 .Select(i => i.Nombre)
@@ -153,36 +159,51 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 .ToList() ?? new List<string>();
 
             var imagenPrincipal = model.Imagenes?.FirstOrDefault(i => !string.IsNullOrEmpty(i.Url))?.Url;
+            
+            var descCorta = model.Descripcion ?? string.Empty;
+            if (descCorta.Length > 150)
+            {
+                descCorta = descCorta.Substring(0, 147) + "...";
+            }
 
             return new ListadoAtracciones
             {
                 id = model.Guid ?? string.Empty,
                 nombre = model.Nombre ?? string.Empty,
-                descripcion_corta = model.Descripcion,
+                descripcion_corta = descCorta,
                 precio_desde = model.PrecioReferencia,
                 moneda = model.Moneda ?? "USD",
                 ciudad = destinoNombre,
-                total_resenias = totalResenias,
+                total_resenas = totalResenias,
                 calificacion = calificacion,
                 idiomas_disponibles = model.Idiomas?.Select(i => i.Nombre).Where(n => !string.IsNullOrWhiteSpace(n)).ToList() ?? new List<string>(),
-                cupos_disponibles = cuposDisponibles,
-                disponible = disponible,
                 
-                disponible_hoy = horarios.Any(h =>
+                disponibilidad = new DisponibilidadDto
                 {
-                    if (h == null) return false;
-                    if ((h.Cupos) <= 0) return false;
-                    if (!DateTime.TryParse(h.Fecha, out var dt)) return false;
-                    return dt == nowDate;
-                }),
-                proxima_fecha_disponible = proximaFecha,
+                    disponible = disponible,
+                    disponible_hoy = horarios.Any(h =>
+                    {
+                        if (h == null) return false;
+                        if ((h.Cupos) <= 0) return false;
+                        if (!DateTime.TryParse(h.Fecha, out var dt)) return false;
+                        return dt == nowDate;
+                    }),
+                    proxima_fecha_disponible = proximaFecha ?? string.Empty,
+                    cupos_disponibles = cuposDisponibles
+                },
                 
                 tipo_nombre = tipoNombre,
                 tipo_tagname = tipoTagname,
+                subtipo_nombre = subtipoNombre,
+                subtipo_tagname = subtipoTagname,
                 pais = destinoPais,
                 etiquetas = etiquetas,
                 duracion_minutos = model.DuracionMinutos ?? 0,
-                imagen_principal = imagenPrincipal
+                imagen_principal = imagenPrincipal,
+                _links = new Dictionary<string, string>
+                {
+                    { "self", $"/api/v2/atracciones/{model.Guid}" }
+                }
             };
         }
         public static FiltroModel ToFilterModel(FiltroDto request)
@@ -265,9 +286,9 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 }).ToList() ?? new List<TicketDto>();
         }
 
-        public static List<TicketDto> MapTicketsByHorarioToResponse(AtraccionModel model, int horarioId)
+        public static List<TicketDto> MapTicketsByHorarioToResponse(AtraccionModel model, string horarioId)
         {
-            var horario = model.Horarios?.FirstOrDefault(h => h.HorarioId == horarioId);
+            var horario = model.Horarios?.FirstOrDefault(h => h.HorarioGuid == horarioId);
             if (horario == null) return new List<TicketDto>();
 
             return horario.Tickets?.Select(t => new TicketDto
