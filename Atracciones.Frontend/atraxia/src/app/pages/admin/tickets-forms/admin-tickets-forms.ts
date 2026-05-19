@@ -76,7 +76,7 @@ export class AdminTicketsFormsComponent implements OnInit {
       this.payload.precio = ticket.precio;
       this.payload.tipo = ticket.tipo;
     } catch (e: any) {
-      this.error = e.response?.data?.Message || 'Error al cargar el ticket';
+      this.error = e.response?.data?.Error || 'Error al cargar el ticket';
       this.showToast(this.error, 'error');
     } finally {
       this.loading = false;
@@ -111,10 +111,10 @@ export class AdminTicketsFormsComponent implements OnInit {
       }, 1500);
     } catch (e: any) {
       const data = e.response?.data;
-      if (data && data.Errors) {
-        this.validationErrors = data.Errors;
+      if (data && data.Details) {
+        this.validationErrors = data.Details;
       } else {
-        this.error = data?.Message || 'Ocurrió un error al guardar';
+        this.error = data?.Error || 'Ocurrió un error al guardar';
       }
       this.showToast('Error al guardar', 'error');
     } finally {

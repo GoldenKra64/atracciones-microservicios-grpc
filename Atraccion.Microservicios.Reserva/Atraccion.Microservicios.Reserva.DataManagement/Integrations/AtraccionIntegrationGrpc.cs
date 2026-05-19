@@ -57,5 +57,22 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
                 HorId = response.HorId
             };
         }
+
+        public async Task<TicketIntegrationDto> GetTicketInfoByGuidAsync(string ticGuid)
+        {
+            var response = await _client.GetTicketInfoAsync(new TicketRequest
+            {
+                TicGuid = ticGuid
+            });
+
+            return new TicketIntegrationDto
+            {
+                TicId = response.TicId,
+                TicTitulo = response.TicTitulo,
+                TicPrecio = response.TicPrecio,
+                TicTipoParticipante = response.TicTipoParticipante,
+                HorId = response.HorId
+            };
+        }
     }
 }

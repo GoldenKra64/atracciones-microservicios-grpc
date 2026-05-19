@@ -12,6 +12,7 @@ service AtraccionService {
 
 message TicketRequest {
   int32 ticId = 1;
+  string ticGuid = 2;
 }
 
 message TicketResponse {

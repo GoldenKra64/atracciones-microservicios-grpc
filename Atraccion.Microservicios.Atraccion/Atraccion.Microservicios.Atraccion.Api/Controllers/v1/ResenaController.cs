@@ -11,7 +11,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/atracciones")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ResenaController : ControllerBase
     {
         private readonly IResenaBusinessService _service;
@@ -21,14 +21,14 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
             _service = service;
         }
 
-        [HttpGet("{guid:guid}/resenias")]
-        public async Task<IActionResult> GetByAtraccion(string guid)
+        [HttpGet("atraccion/{id}")]
+        public async Task<IActionResult> GetByAtraccion(string id)
         {
-            var data = await _service.GetByAtraccionAsync(guid);
+            var data = await _service.GetByAtraccionAsync(id);
             return Ok(ApiResponse<IEnumerable<ResenaResponse>>.Ok(data));
         }
 
-        [HttpPost("{guid:guid}/resenias")]
+        [HttpPost]
         [Authorize(Roles = "CLIENTE")]
         public async Task<IActionResult> Create(string guid, CreateResenaRequest request)
         {

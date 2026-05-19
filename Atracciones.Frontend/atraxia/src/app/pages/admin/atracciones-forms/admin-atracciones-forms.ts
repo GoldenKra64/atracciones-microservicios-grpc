@@ -151,7 +151,7 @@ export class AdminAtraccionesFormsComponent implements OnInit {
   async guardar() {
     this.error = '';
     this.validationErrors = [];
-    
+
     if (!this.payload.nombre || !this.payload.destinoId) {
       this.error = 'El nombre y el destino son requeridos';
       return;
@@ -169,10 +169,10 @@ export class AdminAtraccionesFormsComponent implements OnInit {
       setTimeout(() => this.router.navigate(['/admin/atracciones']), 1500);
     } catch (e: any) {
       const data = e.response?.data;
-      if (data && data.Errors) {
-        this.validationErrors = data.Errors;
+      if (data && data.Details) {
+        this.validationErrors = data.Details;
       } else {
-        this.error = data?.message || 'Error al guardar';
+        this.error = data?.Error || 'Ocurrió un error al guardar';
       }
       this.showToast('Ocurrió un error al guardar', 'error');
     } finally {
@@ -184,8 +184,8 @@ export class AdminAtraccionesFormsComponent implements OnInit {
   showToast(message: string, type: 'success' | 'error') {
     this.toast = { visible: true, message, type };
     this.cdr.detectChanges();
-    setTimeout(() => { 
-      this.toast.visible = false; 
+    setTimeout(() => {
+      this.toast.visible = false;
       this.cdr.detectChanges();
     }, 3500);
   }

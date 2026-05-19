@@ -16,10 +16,12 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
     public class ReservaBusinessService : IReservaBusinessService
     {
         private readonly IReservaDataService _dataService;
+        private readonly IAtraccionIntegration _atraccionIntegration;
 
-        public ReservaBusinessService(IReservaDataService dataService)
+        public ReservaBusinessService(IReservaDataService dataService, IAtraccionIntegration atraccionIntegration)
         {
             _dataService = dataService;
+            _atraccionIntegration = atraccionIntegration;
         }
 
         public async Task<ReservaResponse> CreateAsync(CreateReservaRequest request)
@@ -34,6 +36,19 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
                 if (linea.tck_guid == null)
                     throw new ValidationException($"Ticket {linea.tck_guid} not found");
             }
+
+            var horario = await _atraccionIntegration.GetHorarioByGuidAsync(request.hor_guid);
+            if (horario == null)
+                throw new ValidationException($"Horario {request.hor_guid} not found");
+            
+            int cantidad = 0;
+            foreach (var linea in request.Lineas)
+            {
+                cantidad += linea.cantidad;
+            }
+
+            if (cantidad > horario.CuposDisponibles)
+                throw new ValidationException($"No hay suficientes cupos para ese horario");
 
             var model = ReservaBusinessMapper.ToCreateModel(request);
 

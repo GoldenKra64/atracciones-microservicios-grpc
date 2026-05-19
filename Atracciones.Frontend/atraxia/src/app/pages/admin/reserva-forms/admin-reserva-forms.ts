@@ -165,7 +165,7 @@ export class AdminReservaFormsComponent implements OnInit {
         this.router.navigate(['/admin/reserva']);
       }, 1500);
     } catch (e: any) {
-      const msg = e.response?.data?.message || 'Error al guardar la reserva';
+      const msg = e.response?.data?.Error || 'Error al guardar la reserva';
       this.showToast(msg, 'error');
       this.saving = false;
       this.cdr.detectChanges();
@@ -191,7 +191,7 @@ export class AdminReservaFormsComponent implements OnInit {
       this.estadoReserva = 'CAN';
       this.form.disable();
     } catch (e: any) {
-      const msg = e.response?.data?.message || 'Error al anular la reserva';
+      const msg = e.response?.data?.Error || 'Error al anular la reserva';
       this.showToast(msg, 'error');
     }
   }

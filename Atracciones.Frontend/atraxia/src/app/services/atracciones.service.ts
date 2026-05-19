@@ -80,7 +80,7 @@ export class AtraccionesService {
   }
 
   async reservar(payload: any) {
-    const res = await api.post('/reserva/cliente', payload);
+    const res = await api.post('/reservas', payload);
     return res.data;
   }
 

@@ -52,7 +52,7 @@ export class AdminDestinoFormsComponent implements OnInit {
       this.payload.nombre = destino.nombre;
       this.payload.pais = destino.pais;
       // Using 'any' since imagenUrl might not be present on Destino interface but is required on payload
-      this.payload.imagenUrl = (destino as any).imagenUrl || 'string';
+      this.payload.imagenUrl = (destino as any).imagenUrl;
     } catch (e: any) {
       this.error = e.response?.data?.Message || 'Error al cargar el destino';
       this.showToast(this.error, 'error');
@@ -71,10 +71,6 @@ export class AdminDestinoFormsComponent implements OnInit {
       return;
     }
 
-    if (!this.payload.imagenUrl) {
-      this.payload.imagenUrl = 'string';
-    }
-
     this.saving = true;
     try {
       if (this.isEdit && this.destinoId) {
@@ -89,10 +85,10 @@ export class AdminDestinoFormsComponent implements OnInit {
       }, 1500);
     } catch (e: any) {
       const data = e.response?.data;
-      if (data && data.Errors) {
-        this.validationErrors = data.Errors;
+      if (data && data.Details) {
+        this.validationErrors = data.Details;
       } else {
-        this.error = data?.Message || 'Ocurrió un error al guardar';
+        this.error = data?.Error || 'Ocurrió un error al guardar';
       }
       this.showToast('Error al guardar', 'error');
     } finally {

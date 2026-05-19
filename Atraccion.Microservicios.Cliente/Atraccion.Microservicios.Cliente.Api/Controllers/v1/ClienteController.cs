@@ -29,6 +29,7 @@ namespace Atraccion.Microservicios.Cliente.Api.Controllers.v1
             return Ok(ApiResponse<ClienteResponse>.Ok(data));
         }
         [HttpGet("profile")]
+        [Authorize(Roles = "CLIENTE")]
         public async Task<IActionResult> GetProfile()
         {
             var id = User.Claims.FirstOrDefault(c => ClaimTypes.NameIdentifier == c.Type)?.Value;

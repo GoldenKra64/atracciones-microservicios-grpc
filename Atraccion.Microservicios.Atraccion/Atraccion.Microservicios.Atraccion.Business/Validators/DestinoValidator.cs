@@ -20,18 +20,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.Validators
             if (string.IsNullOrWhiteSpace(request.Pais))
                 errors["Pais"] = new[] { "El nombre del país no puede ser nulo" };
 
-            if (string.IsNullOrWhiteSpace(request.ImagenUrl))
-                errors["Imagen"] = new[] { "No se puede especificar una imagen nula" };
-
-            if (Uri.TryCreate(request.ImagenUrl, UriKind.Absolute, out var uriResult))
-            {
-                // IGNORE
-            }
-            else
-            {
-                errors["Imagen"] = new[] { "Debe especificarse una URL" };
-            }
-
             if (errors.Any())
                 throw new ValidationException(errors);
         }
