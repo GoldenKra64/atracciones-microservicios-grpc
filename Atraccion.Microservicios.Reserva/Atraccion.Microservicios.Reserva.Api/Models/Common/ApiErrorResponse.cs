@@ -3,20 +3,22 @@
     public class ApiErrorResponse
     {
         public int Status { get; set; }
-        public string Message { get; set; } = "Ocurrió un error";
+        public string Error { get; set; } = "Ocurrió un error";
 
-        public List<string> Errors { get; set; } = new();
+        public List<string> Details { get; set; } = new();
 
         public string? TraceId { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
         public static ApiErrorResponse Fail(int status, string message, List<string>? errors = null, string? traceId = null)
         {
             return new ApiErrorResponse
             {
-                Message = message,
+                Error = message,
                 Status = status,
-                Errors = errors ?? new List<string>(),
-                TraceId = traceId
+                Details = errors ?? new List<string>(),
+                TraceId = traceId,
+                Timestamp = DateTime.Now
             };
         }
     }

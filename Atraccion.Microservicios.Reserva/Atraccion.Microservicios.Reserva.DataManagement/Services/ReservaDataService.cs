@@ -60,15 +60,13 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
             try
             {
-                // 🔄 Llamada "gRPC" al microservicio de Atraccion
                 var horario = await _atraccionIntegration.GetHorarioByGuidAsync(model.HorarioGuid);
                 if (horario == null) throw new ArgumentNullException(nameof(horario));
 
                 var entity = ReservaMapper.ToEntity(model, horario);
                 foreach (var linea in model.Lineas)
                 {
-                    // 🔄 Llamada "gRPC" al microservicio de Atraccion
-                    var ticketInfo = await _atraccionIntegration.GetTicketInfoAsync(Int32.Parse(linea.TicketId));
+                    var ticketInfo = await _atraccionIntegration.GetTicketInfoByGuidAsync(linea.TicketId);
                     if (ticketInfo == null) throw new Exception($"Ticket {linea.TicketId} no encontrado");
 
                     var det = new DetalleReserva
@@ -80,7 +78,6 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                         TicPrecioUnitario = ticketInfo.TicPrecio,
                         TicSubtotal = ticketInfo.TicPrecio * linea.Cantidad,
                         TicTitulo = ticketInfo.TicTitulo,
-                        // Ticket = null (Ya no hay propiedad de navegación)
                         Reserva = entity,
                         RevId = entity.RevId
                     };
@@ -97,10 +94,8 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 {
                     entity.RevEstado = "APR";
 
-                    // Restar cupos vía "gRPC" (Orquestación local síncrona)
                     foreach (var det in entity.Detalles)
                     {
-                        // 🔄 Llamada "gRPC" al microservicio de Atraccion para restar cupos
                         await _atraccionIntegration.ConsumeCapacityAsync(horario.HorId, det.TicCantidad);
                     }
                 }
@@ -109,14 +104,12 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                 if (!isPublic)
                 {
-                    // 🔄 Llamada "gRPC" al microservicio de Factura
                     await _facturaIntegration.GenerateInvoiceAsync(new GenerateInvoiceDto
                     {
                         RevId = id,
                         CliId = entity.CliId ?? 0,
                         Canal = entity.RevCanal,
                         Total = entity.RevTotal,
-                        // Para CreateAsync que genera factura (isPublic = false) no tenemos receptor específico aquí
                         NombreReceptor = null,
                         CorreoReceptor = null
                     });
@@ -229,7 +222,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                 foreach (var linea in model.Lineas)
                 {
-                    var ticket = await _atraccionIntegration.GetTicketInfoAsync(Int32.Parse(linea.TicketId));
+                    var ticket = await _atraccionIntegration.GetTicketInfoByGuidAsync(linea.TicketId);
                     if (ticket == null) throw new Exception($"Ticket {linea.TicketId} no encontrado");
 
                     if (detallesExistentes.TryGetValue(ticket.TicId, out var detExistente))

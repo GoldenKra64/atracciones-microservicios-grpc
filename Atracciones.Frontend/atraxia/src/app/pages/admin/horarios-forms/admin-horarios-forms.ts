@@ -71,7 +71,7 @@ export class AdminHorariosFormsComponent implements OnInit {
     try {
       const horario = await this.svc.getById(guid);
       this.payload.atraccionId = horario.atraccionId;
-      this.payload.fecha = horario.fecha; 
+      this.payload.fecha = horario.fecha;
       this.payload.horaInicio = horario.horaInicio;
       this.payload.horaFin = horario.horaFin || '';
       this.payload.cupos = horario.cupos;
@@ -87,7 +87,7 @@ export class AdminHorariosFormsComponent implements OnInit {
   async guardar() {
     this.error = '';
     this.validationErrors = [];
-    
+
     // Ensure numeric values
     this.payload.atraccionId = Number(this.payload.atraccionId);
     this.payload.cupos = Number(this.payload.cupos);
@@ -111,10 +111,10 @@ export class AdminHorariosFormsComponent implements OnInit {
       }, 1500);
     } catch (e: any) {
       const data = e.response?.data;
-      if (data && data.Errors) {
-        this.validationErrors = data.Errors;
+      if (data && data.Details) {
+        this.validationErrors = data.Details;
       } else {
-        this.error = data?.Message || 'Ocurrió un error al guardar';
+        this.error = data?.Error || 'Ocurrió un error al guardar';
       }
       this.showToast('Error al guardar', 'error');
     } finally {
@@ -126,9 +126,9 @@ export class AdminHorariosFormsComponent implements OnInit {
   showToast(message: string, type: 'success' | 'error') {
     this.toast = { visible: true, message, type };
     this.cdr.detectChanges();
-    setTimeout(() => { 
-        this.toast.visible = false; 
-        this.cdr.detectChanges();
+    setTimeout(() => {
+      this.toast.visible = false;
+      this.cdr.detectChanges();
     }, 3500);
   }
 }

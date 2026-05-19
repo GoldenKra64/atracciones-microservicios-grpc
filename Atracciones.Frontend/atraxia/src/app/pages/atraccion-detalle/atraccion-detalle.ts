@@ -18,7 +18,7 @@ export class AtraccionDetalleComponent implements OnInit {
   error = '';
   selectedImg = 0;
 
-
+  at_guid: string = '';
   horarioSeleccionado: any = null;
   cantidades: { [tckGuid: string]: number } = {};
   reserving = false;
@@ -35,6 +35,7 @@ export class AtraccionDetalleComponent implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')!;
+    this.at_guid = id;
     this.cargar(id);
   }
 
@@ -91,6 +92,7 @@ export class AtraccionDetalleComponent implements OnInit {
       .map(([tck_guid, cantidad]) => ({ tck_guid, cantidad }));
 
     const payload = {
+      at_guid: this.at_guid,
       hor_guid: this.horarioSeleccionado.horarioGuid,
       origen_canal: 'ATRAXIA',
       lineas
@@ -100,10 +102,10 @@ export class AtraccionDetalleComponent implements OnInit {
       const res = await this.svc.reservar(payload);
       console.log(res);
       this.modalSuccess = res.success !== false;
-      this.modalMsg = res.message || 'Reserva procesada exitosamente';
+      this.modalMsg = res.Error || 'Reserva procesada exitosamente';
     } catch (e: any) {
       this.modalSuccess = false;
-      this.modalMsg = e.response?.message || 'Error al procesar la reserva';
+      this.modalMsg = e.response?.Error || 'Error al procesar la reserva';
     } finally {
       this.reserving = false;
       this.showModal = true;

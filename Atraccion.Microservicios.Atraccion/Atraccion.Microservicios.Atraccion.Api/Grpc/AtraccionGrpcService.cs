@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Api.Protos;
+using Atraccion.Microservicios.Atraccion.Api.Protos;
 using Atraccion.Microservicios.Atraccion.DataManagement.Interfaces;
 using Grpc.Core;
 using System;
@@ -23,9 +23,20 @@ namespace Atraccion.Microservicios.Atraccion.Api.Grpc
         {
             try
             {
-                var ticket = await _ticketService.GetByIdAsync(request.TicId);
-                if (ticket == null)
-                    throw new RpcException(new Status(StatusCode.NotFound, $"Ticket con Id {request.TicId} no encontrado."));
+                Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket.TicketModel ticket = null;
+                
+                if (!string.IsNullOrEmpty(request.TicGuid))
+                {
+                    ticket = await _ticketService.GetByGuidAsync(request.TicGuid);
+                    if (ticket == null)
+                        throw new RpcException(new Status(StatusCode.NotFound, $"Ticket con Guid {request.TicGuid} no encontrado."));
+                }
+                else
+                {
+                    ticket = await _ticketService.GetByIdAsync(request.TicId);
+                    if (ticket == null)
+                        throw new RpcException(new Status(StatusCode.NotFound, $"Ticket con Id {request.TicId} no encontrado."));
+                }
 
                 return new TicketResponse
                 {
