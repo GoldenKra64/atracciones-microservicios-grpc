@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Atraccion.Api.Protos;
+﻿using Atraccion.Microservicios.Atraccion.Api.Protos;
 using Atraccion.Microservicios.Atraccion.DataManagement.Interfaces;
 using Grpc.Core;
 using System;
@@ -23,7 +23,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Grpc
         {
             try
             {
-                Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket.TicketModel ticket = null;
+                Atraccion.DataManagement.Models.Ticket.TicketModel ticket = null;
                 
                 if (!string.IsNullOrEmpty(request.TicGuid))
                 {
