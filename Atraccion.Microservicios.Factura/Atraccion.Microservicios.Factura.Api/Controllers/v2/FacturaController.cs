@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Atraccion.Microservicios.Factura.Api.Controllers.v1
+namespace Atraccion.Microservicios.Factura.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/facturas")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/facturas")]
     public class FacturaController : ControllerBase
     {
         private readonly IFacturaBusinessService _service;

@@ -1,25 +1,22 @@
 ﻿using Asp.Versioning;
 using Atraccion.Microservicios.Atraccion.Api.Models.Common;
-using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
-using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.NoIncluye;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
+namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/tickets")]
-    public class TicketController : ControllerBase
+    [ApiVersion("2.0")]
+    [Route("api/v2/[controller]")]
+    public class NoIncluyeController : ControllerBase
     {
-        private readonly ITicketBusinessService _service;
-        private readonly IHorarioBusinessService _horarioService;
+        private readonly INoIncluyeBusinessService _service;
 
-        public TicketController(ITicketBusinessService service, IHorarioBusinessService _horarioService)
+        public NoIncluyeController(INoIncluyeBusinessService service)
         {
             _service = service;
-            this._horarioService = _horarioService;
         }
 
         [HttpGet]
@@ -27,7 +24,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         public async Task<IActionResult> GetAll()
         {
             var data = await _service.GetAllAsync();
-            return Ok(ApiResponse<List<TicketRes>>.Ok(data, "Tickets traidos con éxito"));
+            return Ok(ApiResponse<IEnumerable<NoIncluyeResponse>>.Ok(data));
         }
 
         [HttpGet("{id}")]
@@ -35,25 +32,24 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         public async Task<IActionResult> GetById(int id)
         {
             var data = await _service.GetByIdAsync(id);
-            return Ok(ApiResponse<TicketRes>.Ok(data, "Tickets traidos con éxito"));
+            return Ok(ApiResponse<NoIncluyeResponse>.Ok(data));
         }
-
 
         [HttpPost]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> Create(CreateTicketRequest request)
+        public async Task<IActionResult> Create(CreateNoIncluyeRequest request)
         {
             var id = await _service.CreateAsync(request);
-            return Ok(ApiResponse<int>.Ok(id));
+            return Ok(ApiResponse<int>.Ok(id, "No Incluye creado"));
         }
 
         [HttpPut("{id}")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> Update(UpdateTicketRequest request, int id)
+        public async Task<IActionResult> Update(UpdateNoIncluyeRequest request, int id)
         {
             request.Id = id;
             await _service.UpdateAsync(request);
-            return Ok(ApiResponse<string>.Ok("OK"));
+            return Ok(ApiResponse<string>.Ok("OK", "No Incluye actualizado"));
         }
 
         [HttpDelete("{id}")]
@@ -61,7 +57,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         public async Task<IActionResult> Delete(int id)
         {
             await _service.LogicalDeleteAsync(id);
-            return Ok(ApiResponse<string>.Ok("OK"));
+            return Ok(ApiResponse<string>.Ok("OK", "No Incluye eliminado"));
         }
     }
 }

@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
+namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/[controller]")]
     public class ResenaController : ControllerBase
     {
         private readonly IResenaBusinessService _service;
