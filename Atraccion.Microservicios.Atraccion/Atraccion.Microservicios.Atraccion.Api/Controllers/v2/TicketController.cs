@@ -6,11 +6,11 @@ using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
+namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/tickets")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/tickets")]
     public class TicketController : ControllerBase
     {
         private readonly ITicketBusinessService _service;
@@ -62,6 +62,13 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         {
             await _service.LogicalDeleteAsync(id);
             return Ok(ApiResponse<string>.Ok("OK"));
+        }
+
+        [HttpGet("{guid:guid}/horarios")]
+        public async Task<IActionResult> GetHorariosByTickets(string guid)
+        {
+            var data = await _service.GetHorariosByTicketAsync(guid);
+            return Ok(ApiResponse<HorarioDto>.Ok(data, "Lista de horarios para el ticket", 200));
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v1/[controller]")]
     public class DestinoController : ControllerBase
     {
         private readonly IDestinoBusinessService _service;

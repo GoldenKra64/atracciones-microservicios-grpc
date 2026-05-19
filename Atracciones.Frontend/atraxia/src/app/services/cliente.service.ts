@@ -71,7 +71,7 @@ export class ClienteService {
   }
 
   async getFacturas(page = 1, size = 20): Promise<FacturasResponse> {
-    const res = await api.get('/factura', { params: { page, size } });
+    const res = await api.get('/facturas', { params: { page, size } });
     return res.data.data;
   }
 

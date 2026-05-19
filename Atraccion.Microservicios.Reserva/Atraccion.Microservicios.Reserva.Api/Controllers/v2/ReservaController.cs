@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Atraccion.Microservicios.Reserva.Api.Controllers.v1
+namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/reservas")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/reservas")]
     public class ReservaController : ControllerBase
     {
         private readonly IReservaBusinessService _service;

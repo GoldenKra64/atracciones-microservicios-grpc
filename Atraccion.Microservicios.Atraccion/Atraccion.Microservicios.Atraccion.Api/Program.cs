@@ -18,6 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddGrpc(); // Agregado para gRPC Server
 
+/*
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(80);
@@ -27,6 +28,7 @@ builder.WebHost.ConfigureKestrel(options =>
         o.Protocols = HttpProtocols.Http2;
     });
 });
+*/
 
 // ===============================
 // BUILD

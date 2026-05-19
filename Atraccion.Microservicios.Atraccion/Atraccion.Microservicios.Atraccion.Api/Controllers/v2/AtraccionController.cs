@@ -12,11 +12,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
+namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/atracciones")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/atracciones")]
     public class AtraccionController : ControllerBase
     {
         private readonly IAtraccionBusinessService _service;
@@ -90,6 +90,53 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
         {
             await _service.LogicalDeleteAsync(id);
             return Ok(ApiResponse<string>.Ok("OK"));
+        }
+
+        // Contratos
+        [HttpGet("{guid:guid}/tickets")]
+        public async Task<IActionResult> GetTicketsForAttraction(string guid)
+        {
+            var data = await _service.GetTicketsByAttraction(guid);
+            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Listado de tickets para la atracción"));
+        }
+
+        [HttpGet("{guid:guid}/horarios")]
+        public async Task<IActionResult> GetHorariosProximosByAttraction(string guid)
+        {
+            var data = await _service.GetHorariosByAttraction(guid);
+            return Ok(ApiResponse<List<HorarioDto>>.Ok(data, "Listado de cupos con horarios por atracción"));
+        }
+
+        [HttpGet("{guid:guid}/horarios/{horarioId:int}/tickets")]
+        public async Task<IActionResult> GetTicketsPorHorario(string guid, int horarioId)
+        {
+            var data = await _service.GetTicketsByHorario(guid, horarioId);
+            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Tickets disponibles para el horario"));
+        }
+
+        // Resenia contratos
+        [HttpGet("{guid:guid}/resenias")]
+        public async Task<IActionResult> GetReseniasByAtraccion(string guid)
+        {
+            var data = await _resenaBusinessService.GetByAtraccionAsync(guid);
+            return Ok(ApiResponse<IEnumerable<ResenaResponse>>.Ok(data, "Listado de reseñas para la atracción"));
+        }
+
+        [HttpPost("{guid:guid}/resenias")]
+        [Authorize(Roles = "CLIENTE")]
+        public async Task<IActionResult> CreateResena(string guid, CreateResenaRequest request)
+        {
+            var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (clienteId == null)
+            {
+                throw new UnauthorizedBusinessException("Cliente ID is missing");
+            }
+            request.ClienteId = int.Parse(clienteId);
+            request.Comentario = request.Comentario?.Trim();
+            request.AtraccionGuid = guid;
+
+            var data = await _resenaBusinessService.CreateAsync(request);
+            return Ok(ApiResponse<int>.Ok(data, "Reseña creada exitosamente"));
         }
     }
 }

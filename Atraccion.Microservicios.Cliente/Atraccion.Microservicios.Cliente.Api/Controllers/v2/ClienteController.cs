@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace Atraccion.Microservicios.Cliente.Api.Controllers.v1
+namespace Atraccion.Microservicios.Cliente.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/[controller]")]
     public class ClienteController : ControllerBase
     {
         private readonly IClienteBusinessService _service;

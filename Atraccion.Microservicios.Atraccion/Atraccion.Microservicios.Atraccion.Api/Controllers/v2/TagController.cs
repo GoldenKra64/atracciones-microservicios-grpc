@@ -4,11 +4,11 @@ using Atraccion.Microservicios.Atraccion.Business.DTOs.Tag;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v1
+namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/[controller]")]
     public class TagController : ControllerBase
     {
         private readonly ITagBusinessService _service;

@@ -4,11 +4,11 @@ using Atraccion.Microservicios.Auth.Business.DTOs.Usuario;
 using Atraccion.Microservicios.Auth.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Atraccion.Microservicios.Auth.Api.Controllers.v1
+namespace Atraccion.Microservicios.Auth.Api.Controllers.v2
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/[controller]")]
+    [ApiVersion("2.0")]
+    [Route("api/v2/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IUsuarioBusinessService _service;
