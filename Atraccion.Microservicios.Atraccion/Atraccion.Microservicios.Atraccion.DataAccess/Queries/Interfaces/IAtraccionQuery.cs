@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Common;
+using Atraccion.Microservicios.Atraccion.DataAccess.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +23,7 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries.Interfaces
         Task<Atraccion.DataAccess.Entities.Atraccion?> GetByIdAsync(string id); // Guid
         Task<List<Atraccion.DataAccess.Entities.Atraccion?>> GetAtraccionTypeAsync();
         Task<Atraccion.DataAccess.Entities.Atraccion?> GetInternalByIdAsync(string id);
+        Task<int> GetActiveCountAsync();
         Task<List<Atraccion.DataAccess.Entities.Atraccion?>> GetAllInternalAsync();
     }
 }

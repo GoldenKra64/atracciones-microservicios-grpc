@@ -48,7 +48,32 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
             }
 
             var data = await _service.GetByClienteAsync(int.Parse(clienteId), page, limit);
-            return Ok(ApiResponse<PagedResponse<ReservaResponse>>.Ok(data, "Listado de reservas del cliente"));
+
+            var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+            string? nextPage = data.PageNumber < data.TotalPages
+                ? $"{requestUrl}?page={data.PageNumber + 1}&limit={data.PageSize}"
+                : null;
+            string? prevPage = data.PageNumber > 1
+                ? $"{requestUrl}?page={data.PageNumber - 1}&limit={data.PageSize}"
+                : null;
+
+            var response = new
+            {
+                status = 200,
+                message = "Listado de reservas del cliente",
+                data = data.Items,
+                pagination = new
+                {
+                    total_records = data.TotalRecords,
+                    page = data.PageNumber,
+                    limit = data.PageSize,
+                    total_pages = data.TotalPages,
+                    next_page = nextPage,
+                    prev_page = prevPage
+                }
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("all")]

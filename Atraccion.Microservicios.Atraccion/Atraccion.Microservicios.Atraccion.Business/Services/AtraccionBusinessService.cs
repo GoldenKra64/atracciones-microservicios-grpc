@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Atraccion.Business.DTOs;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Filters;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
@@ -74,6 +74,24 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                 data,
                 AtraccionBusinessMapper.ToResponse
             );
+        }
+
+        public async Task<AtraccionesPagedResponseDto> GetPagedV2Async(
+            FiltroDto filtro)
+        {
+            var filtroModel = AtraccionBusinessMapper.ToFilterModel(filtro);
+            var data = await _dataService.GetPagedAsync(filtroModel);
+            var unFilteredProductCount = await _dataService.GetActiveCountAsync();
+
+            return new AtraccionesPagedResponseDto
+            {
+                Items = data.Items.Select(AtraccionBusinessMapper.ToResponse).ToList(),
+                TotalRecords = data.TotalRecords,
+                PageNumber = data.PageNumber,
+                PageSize = data.PageSize,
+                TotalPages = (int)Math.Ceiling((double)data.TotalRecords / data.PageSize),
+                UnfilteredProductCount = unFilteredProductCount
+            };
         }
 
         public async Task LogicalDeleteAsync(string id)
@@ -172,7 +190,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
             return AtraccionBusinessMapper.MapHorariosToResponse(data);
         }
 
-        public async Task<List<TicketDto>> GetTicketsByHorario(string guid, int horarioId)
+        public async Task<List<TicketDto>> GetTicketsByHorario(string guid, string horarioId)
         {
             var data = await _dataService.GetByIdAsync(guid);
             if (data == null) throw new NotFoundException("Atracción", guid);
