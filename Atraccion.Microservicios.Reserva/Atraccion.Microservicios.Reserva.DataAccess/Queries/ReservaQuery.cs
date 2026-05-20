@@ -23,10 +23,6 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Queries
         {
             var query = _context.Reservas
                 .Include(r => r.Detalles)
-                /*
-                    .ThenInclude(d => d.Ticket)
-                .Include(r => r.Factura)
-                */
                 .Where(r => r.CliId == clienteId);
 
             var total = await query.CountAsync();
@@ -50,12 +46,6 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Queries
         {
             return await _context.Reservas
                 .Include(r => r.Detalles)
-                /*
-                    .ThenInclude(d => d.Ticket)
-                        .ThenInclude(t => t.Horario)
-                            .ThenInclude(h => h.Atraccion)
-                .Include(r => r.Factura)
-                */
                 .FirstOrDefaultAsync(r => r.RevId == reservaId);
         }
 
@@ -63,22 +53,36 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Queries
         {
             return await _context.Reservas
                 .Include(r => r.Detalles)
-                /*
-                    .ThenInclude(d => d.Ticket)
-                        .ThenInclude(t => t.Horario)
-                            .ThenInclude(h => h.Atraccion).AsTracking()
-                */
                 .FirstOrDefaultAsync(r => r.RevGuid == id);
         }
 
         public async Task<List<Reserva.DataAccess.Entities.Reserva?>> GetAllAsync()
         {
             return await _context.Reservas
+                .Include(r => r.Detalles).Where(x => x.RevEstado == "PEN").ToListAsync();
+        }
+
+        public async Task<PagedResult<Entities.Reserva>> GetAllBookingAsync(int page, int size)
+        {
+            var query = _context.Reservas
                 .Include(r => r.Detalles)
-                            /*
-                                .ThenInclude(x => x.Ticket)
-                                    .ThenInclude(x => x.Horario)
-                                        .ThenInclude(x => x.Atraccion)*/.Where(x => x.RevEstado == "PEN").ToListAsync();
+                .Where(r => r.RevCanal == "BOOKING" && r.RevEstado == "PEN");
+
+            var total = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(x => x.RevFechaReservaUtc)
+                .Skip((page - 1) * size)
+                .Take(size)
+                .ToListAsync();
+
+            return new PagedResult<Reserva.DataAccess.Entities.Reserva>
+            {
+                Items = items,
+                TotalRecords = total,
+                PageNumber = page,
+                PageSize = size
+            };
         }
     }
 }

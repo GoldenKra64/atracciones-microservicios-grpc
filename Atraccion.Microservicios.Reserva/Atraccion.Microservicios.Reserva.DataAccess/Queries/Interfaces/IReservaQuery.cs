@@ -13,5 +13,6 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Queries.Interfaces
         Task<Reserva.DataAccess.Entities.Reserva?> GetDetalleAsync(int reservaId);
         Task<Reserva.DataAccess.Entities.Reserva?> GetByIdAsync(string id);
         Task<List<Reserva.DataAccess.Entities.Reserva?>> GetAllAsync();
+        Task<PagedResult<Reserva.DataAccess.Entities.Reserva>> GetAllBookingAsync(int page, int size);
     }
 }

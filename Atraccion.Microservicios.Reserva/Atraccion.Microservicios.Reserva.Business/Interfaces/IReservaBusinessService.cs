@@ -26,5 +26,7 @@ namespace Atraccion.Microservicios.Reserva.Business.Interfaces
         Task LogicalDeleteAsync(string id);
         Task CancelarAsync(string id, CancelarReservaRequest request);
         Task<FacturaResponse> ApproveAsync(string id, ConfirmarPagoRequest request);
+
+        Task<PagedResponse<ReservaResponse>> GetAllBookingAsync(int page, int size);
     }
 }

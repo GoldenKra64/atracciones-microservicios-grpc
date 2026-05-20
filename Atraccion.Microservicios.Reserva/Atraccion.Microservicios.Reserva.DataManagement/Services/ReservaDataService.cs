@@ -1,3 +1,4 @@
+using Atraccion.Microservicios.Reserva.DataAccess.Common;
 using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using Atraccion.Microservicios.Reserva.DataAccess.Queries.Interfaces;
 using Atraccion.Microservicios.Reserva.DataManagement.Integrations;
@@ -282,6 +283,19 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
         public async Task CancelAsync(string id)
         {
             await _uow.ReservaRepository.CancelAsync(id);
+        }
+
+        public async Task<DataPagedResult<ReservaModel>> GetAllBookingAsync(int page, int size)
+        {
+            var result = await _query.GetAllBookingAsync(page, size);
+
+            return new DataPagedResult<ReservaModel>
+            {
+                Items = result.Items.Select(ReservaMapper.ToModel),
+                TotalRecords = result.TotalRecords,
+                PageNumber = result.PageNumber,
+                PageSize = result.PageSize
+            };
         }
     }
 }
