@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
+using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
@@ -226,11 +226,88 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
 
         public static AtraccionDetalleDto ToResponseDetalle(AtraccionModel model)
         {
+            var destinoNombre = model.Destino?.Nombre ?? string.Empty;
+            var destinoPais = model.Destino?.Pais ?? string.Empty;
+
+            var resenas = model.Resena ?? new List<ResenaModel>();
+            var totalResenias = resenas.Count;
+            var calificacion = totalResenias > 0 ? resenas.Average(r => r.Calificacion) : 0.0;
+
+            var horarios = model.Horarios ?? new List<HorarioModel>();
+            var cuposDisponibles = horarios.Sum(h => h?.Cupos ?? 0);
+            var disponible = horarios.Any(h => (h?.Cupos ?? 0) > 0);
+
+            DateTime nowDate = DateTime.UtcNow.Date;
+
+            var proximaFecha = horarios
+                .Where(h => (h?.Cupos ?? 0) > 0)
+                .Select(h =>
+                {
+                    if (DateTime.TryParse(h?.Fecha, out var dt)) return (DateTime?)dt;
+                    return null;
+                })
+                .Where(d => d.HasValue && d.Value >= nowDate)
+                .OrderBy(d => d)
+                .Select(d => d.Value.ToString("yyyy-MM-dd"))
+                .FirstOrDefault();
+            
+            var parentCat = model.Categorias?.FirstOrDefault(c => c.ParentId == null);
+            var childCat = model.Categorias?.FirstOrDefault(c => c.ParentId != null);
+            
+            var tipoNombre = parentCat?.Nombre ?? string.Empty;
+            var tipoTagname = parentCat?.Guid ?? string.Empty;
+
+            var subtipoNombre = childCat?.Nombre ?? string.Empty;
+            var subtipoTagname = childCat?.Guid ?? string.Empty;
+
+            var etiquetas = model.TagAtracciones?
+                .Select(i => i.Nombre)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList() ?? new List<string>();
+
+            var imagenPrincipal = model.Imagenes?.FirstOrDefault(i => !string.IsNullOrEmpty(i.Url))?.Url ?? string.Empty;
+            
+            var descCorta = model.Descripcion ?? string.Empty;
+            if (descCorta.Length > 150)
+            {
+                descCorta = descCorta.Substring(0, 147) + "...";
+            }
+
             return new AtraccionDetalleDto
             {
                 id = model.Guid ?? string.Empty,
                 nombre = model.Nombre ?? string.Empty,
-                descripcion = model.Descripcion,
+                ciudad = destinoNombre,
+                pais = destinoPais,
+                tipo_tagname = tipoTagname,
+                tipo_nombre = tipoNombre,
+                subtipo_tagname = subtipoTagname,
+                subtipo_nombre = subtipoNombre,
+                etiquetas = etiquetas,
+                descripcion_corta = descCorta,
+                imagen_principal = imagenPrincipal,
+                duracion_minutos = model.DuracionMinutos ?? 0,
+                precio_desde = (decimal)(model.PrecioReferencia ?? 0),
+                moneda = model.Moneda ?? "USD",
+                calificacion = calificacion,
+                total_resenas = totalResenias,
+                idiomas_disponibles = model.Idiomas?.Select(i => i.Nombre).Where(n => !string.IsNullOrWhiteSpace(n)).ToList() ?? new List<string>(),
+                
+                disponibilidad = new DisponibilidadDto
+                {
+                    disponible = disponible,
+                    disponible_hoy = horarios.Any(h =>
+                    {
+                        if (h == null) return false;
+                        if ((h.Cupos) <= 0) return false;
+                        if (!DateTime.TryParse(h.Fecha, out var dt)) return false;
+                        return dt == nowDate;
+                    }),
+                    proxima_fecha_disponible = proximaFecha ?? string.Empty,
+                    cupos_disponibles = cuposDisponibles
+                },
+
+                descripcion = model.Descripcion ?? string.Empty,
                 incluye_transporte = model.IncluyeTransporte,
                 incluye_acompaniante = model.IncluyeAcompaniante,
                 punto_encuentro = model.PuntoEncuentro,
@@ -259,8 +336,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 
                 Links = new LinksDto
                 {
-                    Self = $"/api/atracciones/{model.Guid}",
-                    Listado = $"/api/destinos/{model.Guid}"
+                    Self = $"/api/v2/atracciones/{model.Guid}"
                 }
             };
         }

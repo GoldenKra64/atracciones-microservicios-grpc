@@ -142,7 +142,7 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries
             // Filtros
             if (ciudad != null)
             {
-                query = query.Where(x => x.Destino.DesNombre.ToLower() == ciudad);
+                query = query.Where(x => x.Destino.DesNombre.ToLower() == ciudad.ToLower());
             }
             if (idioma != null)
             {

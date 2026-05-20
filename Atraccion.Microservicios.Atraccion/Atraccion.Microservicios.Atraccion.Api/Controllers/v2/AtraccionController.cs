@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Atraccion.Api.Models.Common;
 using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
@@ -50,12 +50,6 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
             var data = await _service.GetPagedV2Async(filtro);
             
             var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-            string? nextPage = data.PageNumber < data.TotalPages 
-                ? $"{requestUrl}?page={data.PageNumber + 1}&limit={data.PageSize}" 
-                : null;
-            string? prevPage = data.PageNumber > 1 
-                ? $"{requestUrl}?page={data.PageNumber - 1}&limit={data.PageSize}" 
-                : null;
 
             var response = new
             {
@@ -64,20 +58,18 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
                 data = data.Items,
                 pagination = new
                 {
-                    total_records = data.TotalRecords,
-                    limit = filtro.Limit,
-                    page = filtro.Page,
-                    total_pages = data.TotalPages,
-                    next_page = nextPage,
-                    prev_page = prevPage
+                    total = data.TotalRecords,
+                    limit = filtro?.Limit ?? 10,
+                    page = filtro?.Page ?? 1,
+                    total_pages = data.TotalPages
                 },
                 filterStats = new
                 {
-                    tipo = filtro?.Tipo,
-                    subtipo = filtro?.Subtipo,
-                    precio_max = filtro?.PrecioMax,
-                    precio_min = filtro?.PrecioMin
+                    filteredProductCount = data.TotalRecords,
+                    unfilteredProductCount = data.UnfilteredProductCount
                 },
+                sorters = new List<string>(),
+                defaultSorter = "recommended",
                 _links = new { self = requestUrl },
             };
 

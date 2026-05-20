@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
@@ -37,14 +37,20 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
         }
 
         [HttpGet]
-        [Authorize(Roles = "CLIENTE")]
         public async Task<IActionResult> GetMyReservations([FromQuery] int page = 1, [FromQuery] int limit = 10)
         {
             var clienteId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             if (clienteId == null)
             {
-                throw new UnauthorizedBusinessException("Cliente ID is missing");
+                return Unauthorized(new
+                {
+                    status = 401,
+                    error = "Unauthorized",
+                    details = "El usuario no se encuentra autenticado",
+                    timestamp = DateTime.UtcNow.ToString("o"),
+                    path = HttpContext.Request.Path.Value
+                });
             }
 
             var data = await _service.GetByClienteAsync(int.Parse(clienteId), page, limit);
@@ -128,8 +134,8 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
         [HttpPost("{id:guid}/pagos/confirmacion")]
         public async Task<IActionResult> Approve(string id, [FromBody] ConfirmarPagoRequest request)
         {
-            await _service.ApproveAsync(id, request);
-            return Ok(ApiResponse<string>.Ok(null, "Reserva y Factura generadas exitosamente", 200));
+            var response = await _service.ApproveAsync(id, request);
+            return Ok(ApiResponse<Atraccion.Microservicios.Reserva.Business.DTOs.Factura.FacturaResponse>.Ok(response, "Operacion exitosa", 201));
         }
 
         [HttpPut("{id:guid}/cancelar")]

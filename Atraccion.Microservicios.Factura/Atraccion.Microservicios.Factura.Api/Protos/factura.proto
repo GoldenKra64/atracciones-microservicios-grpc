@@ -20,4 +20,11 @@ message GenerateInvoiceRequest {
 message GenerateInvoiceResponse {
   bool success = 1;
   int32 facId = 2;
+  string facGuid = 3;
+  string facNumero = 4;
+  double total = 5;
+  string fechaEmision = 6;
+  string estado = 7;
+  string nombreReceptor = 8;
+  string correoReceptor = 9;
 }

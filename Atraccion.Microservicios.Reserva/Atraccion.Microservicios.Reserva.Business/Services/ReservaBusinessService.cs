@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Reserva.Business.DTOs;
+﻿using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
 using Atraccion.Microservicios.Reserva.Business.Exceptions;
 using Atraccion.Microservicios.Reserva.Business.Interfaces;
@@ -71,6 +71,21 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
                     throw new ValidationException($"Ticket {linea.tck_guid} not found");
             }
 
+            var horario = await _atraccionIntegration.GetHorarioByGuidAsync(request.hor_guid);
+            if (horario == null)
+                throw new ValidationException($"Horario {request.hor_guid} not found");
+
+
+            int cantidad = 0;
+            foreach (var linea in request.Lineas)
+            {
+                cantidad += linea.cantidad;
+            }
+
+            if (cantidad > horario.CuposDisponibles)
+                throw new ValidationException($"No hay suficientes cupos para ese horario");
+
+
             var model = ReservaBusinessMapper.ToCreateModel(request);
 
             var created = await _dataService.CreateAsync(model, true);
@@ -127,9 +142,23 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
             await _dataService.CancelAsync(id);
         }
 
-        public async Task ApproveAsync(string id, ConfirmarPagoRequest request)
+        public async Task<Atraccion.Microservicios.Reserva.Business.DTOs.Factura.FacturaResponse> ApproveAsync(string id, ConfirmarPagoRequest request)
         {
-            await _dataService.ApproveAsync(id, request?.nombre_receptor, request?.correo_receptor);
+            var invoice = await _dataService.ApproveAsync(id, request?.nombre_receptor, request?.correo_receptor);
+            var reserva = await _dataService.GetByIdAsync(id);
+
+            return new Atraccion.Microservicios.Reserva.Business.DTOs.Factura.FacturaResponse
+            {
+                FacGuid = invoice.FacGuid,
+                FacNumero = invoice.FacNumero,
+                RevCodigo = reserva?.rev_codigo ?? string.Empty,
+                Total = invoice.Total,
+                Moneda = "USD",
+                FechaEmision = invoice.FechaEmision,
+                Estado = invoice.Estado,
+                NombreReceptor = invoice.NombreReceptor,
+                CorreoReceptor = invoice.CorreoReceptor
+            };
         }
     }
 }
