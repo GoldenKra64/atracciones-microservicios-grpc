@@ -148,10 +148,10 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             var childCat = model.Categorias?.FirstOrDefault(c => c.ParentId != null);
             
             var tipoNombre = parentCat?.Nombre ?? string.Empty;
-            var tipoTagname = parentCat?.Guid ?? string.Empty;
+            var tipoTagname = parentCat?.Nombre.ToLower() ?? string.Empty;
 
             var subtipoNombre = childCat?.Nombre;
-            var subtipoTagname = childCat?.Guid;
+            var subtipoTagname = childCat?.Nombre.ToLower();
 
             var etiquetas = model.TagAtracciones?
                 .Select(i => i.Nombre)
@@ -255,10 +255,10 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             var childCat = model.Categorias?.FirstOrDefault(c => c.ParentId != null);
             
             var tipoNombre = parentCat?.Nombre ?? string.Empty;
-            var tipoTagname = parentCat?.Guid ?? string.Empty;
+            var tipoTagname = parentCat?.Nombre.ToLower() ?? string.Empty;
 
             var subtipoNombre = childCat?.Nombre ?? string.Empty;
-            var subtipoTagname = childCat?.Guid ?? string.Empty;
+            var subtipoTagname = childCat?.Nombre.ToLower() ?? string.Empty;
 
             var etiquetas = model.TagAtracciones?
                 .Select(i => i.Nombre)

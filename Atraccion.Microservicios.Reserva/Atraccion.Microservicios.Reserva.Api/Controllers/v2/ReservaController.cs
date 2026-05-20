@@ -1,4 +1,4 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
@@ -43,14 +43,33 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
 
             if (clienteId == null)
             {
-                return Unauthorized(new
+                var dataBooking = await _service.GetAllBookingAsync(page, limit);
+                
+                var requestUrlBooking = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+                string? nextPageBooking = dataBooking.PageNumber < dataBooking.TotalPages
+                    ? $"{requestUrlBooking}?page={dataBooking.PageNumber + 1}&limit={dataBooking.PageSize}"
+                    : null;
+                string? prevPageBooking = dataBooking.PageNumber > 1
+                    ? $"{requestUrlBooking}?page={dataBooking.PageNumber - 1}&limit={dataBooking.PageSize}"
+                    : null;
+
+                var responseBooking = new
                 {
-                    status = 401,
-                    error = "Unauthorized",
-                    details = "El usuario no se encuentra autenticado",
-                    timestamp = DateTime.UtcNow.ToString("o"),
-                    path = HttpContext.Request.Path.Value
-                });
+                    status = 200,
+                    message = "Listado de reservas del cliente",
+                    data = dataBooking.Items,
+                    pagination = new
+                    {
+                        total_records = dataBooking.TotalRecords,
+                        page = dataBooking.PageNumber,
+                        limit = dataBooking.PageSize,
+                        total_pages = dataBooking.TotalPages,
+                        next_page = nextPageBooking,
+                        prev_page = prevPageBooking
+                    }
+                };
+
+                return Ok(responseBooking);
             }
 
             var data = await _service.GetByClienteAsync(int.Parse(clienteId), page, limit);

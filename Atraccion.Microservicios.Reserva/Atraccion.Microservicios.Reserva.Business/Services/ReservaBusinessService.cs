@@ -160,5 +160,15 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
                 CorreoReceptor = invoice.CorreoReceptor
             };
         }
+
+        public async Task<PagedResponse<ReservaResponse>> GetAllBookingAsync(int page, int size)
+        {
+            var data = await _dataService.GetAllBookingAsync(page, size);
+
+            return CommonBusinessMapper.ToPagedResponse(
+                data,
+                ReservaBusinessMapper.ToResponse
+            );
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Atraccion.Microservicios.Reserva.DataManagement.Protos;
+using Atraccion.Microservicios.Reserva.DataAccess.Common;
 
 namespace Atraccion.Microservicios.Reserva.DataManagement.Interfaces
 {
@@ -21,5 +22,6 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Interfaces
         Task SoftDeleteAsync(string id);
         Task CancelAsync(string id);
         Task<GenerateInvoiceResponse> ApproveAsync(string id, string? nombreReceptor, string? correoReceptor);
+        Task<DataPagedResult<ReservaModel>> GetAllBookingAsync(int page, int size);
     }
 }
