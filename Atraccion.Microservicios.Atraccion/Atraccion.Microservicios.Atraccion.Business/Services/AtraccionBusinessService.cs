@@ -137,7 +137,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
             result.labelFilters = atracciones
                 .Where(a => a?.TagAtracciones != null)
                 .SelectMany(a => a!.TagAtracciones)
-                .Where(t => !string.IsNullOrEmpty(t.Nombre))
+                .Where(t => !string.IsNullOrEmpty(t.Nombre) && (t.Nombre == "free_cancellation" || t.Nombre == "skip_the_line"))
                 .GroupBy(t => t.Nombre)
                 .Select(g => new OpcionFiltro
                 {
@@ -162,6 +162,21 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                 })
                 .OrderByDescending(o => o.productCount)
                 .ToList();
+
+            result.minRatingFilter = new List<OpcionFiltro>
+            {
+                new OpcionFiltro { nombre = "4.5+", tagname = "4.5", productCount = 0 },
+                new OpcionFiltro { nombre = "4.0+", tagname = "4.0", productCount = 0 },
+                new OpcionFiltro { nombre = "3.5+", tagname = "3.5", productCount = 0 },
+                new OpcionFiltro { nombre = "3.0+", tagname = "3.0", productCount = 0 }
+            };
+
+            result.timeOfDayFilter = new List<OpcionFiltro>
+            {
+                new OpcionFiltro { nombre = "Mañana (05:00-12:00)", tagname = "05:00-12:00", productCount = 0 },
+                new OpcionFiltro { nombre = "Tarde (13:00-18:00)", tagname = "13:00-18:00", productCount = 0 },
+                new OpcionFiltro { nombre = "Noche (18:00-05:00)", tagname = "18:00-05:00", productCount = 0 }
+            };
 
             return result;
         }

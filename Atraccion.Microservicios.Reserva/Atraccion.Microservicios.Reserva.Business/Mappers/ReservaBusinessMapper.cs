@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
+using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
 using Atraccion.Microservicios.Reserva.DataManagement.Models.Reserva;
 using System;
 using System.Collections.Generic;
@@ -41,15 +41,27 @@ namespace Atraccion.Microservicios.Reserva.Business.Mappers
                 links.Add("confirmar_pago", $"/api/v2/reservas/{model.rev_guid}/pagos/confirmacion");
             }
 
+            var estadoMapeado = model.rev_estado switch
+            {
+                "PEN" => "PENDIENTE",
+                "APR" => "APROBADO",
+                "CAN" => "CANCELADO",
+                _ => model.rev_estado
+            };
+
+            var fechaReservaIso = DateTime.TryParse(model.rev_fecha_reserva_utc, out var dt) 
+                ? dt.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ") 
+                : model.rev_fecha_reserva_utc;
+
             return new ReservaResponse
             {
                 rev_guid = model.rev_guid,
                 rev_codigo = model.rev_codigo,
-                rev_estado = model.rev_estado,
+                rev_estado = estadoMapeado,
 
-                rev_subtotal = model.rev_subtotal,
-                rev_valor_iva = model.rev_valor_iva,
-                rev_total = model.rev_total,
+                rev_subtotal = Math.Round(model.rev_subtotal, 2),
+                rev_valor_iva = Math.Round(model.rev_valor_iva, 2),
+                rev_total = Math.Round(model.rev_total, 2),
                 moneda = model.moneda,
 
                 hor_fecha = model.hor_fecha,
@@ -58,15 +70,15 @@ namespace Atraccion.Microservicios.Reserva.Business.Mappers
 
                 atraccion_nombre = model.atraccion_nombre,
 
-                rev_fecha_reserva_utc = model.rev_fecha_reserva_utc,
+                rev_fecha_reserva_utc = fechaReservaIso,
 
                 detalle = model.detalle?.Select(d => new DetalleReservaResponse
                 {
                     tck_guid = d.tck_guid,
                     tck_tipo_participante = d.tck_tipo_participante,
                     cantidad = d.cantidad,
-                    precio_unit = d.precio_unit,
-                    subtotal = d.subtotal
+                    precio_unit = Math.Round(d.precio_unit, 2),
+                    subtotal = Math.Round(d.subtotal, 2)
                 }).ToList(),
                 
                 _links = links

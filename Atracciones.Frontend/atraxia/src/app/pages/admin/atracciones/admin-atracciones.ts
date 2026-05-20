@@ -44,10 +44,10 @@ export class AdminAtraccionesComponent implements OnInit {
     this.error = '';
     this.pageNumber = page;
     try {
-      const data = await this.svc.getAtracciones({ Page: this.pageNumber, Limit: this.pageSize });
-      this.atracciones = data.items;
-      this.totalRecords = data.totalRecords;
-      this.totalPages = data.totalPages;
+      const res = await this.svc.getAtracciones({ Page: this.pageNumber, Limit: this.pageSize });
+      this.atracciones = res.data || [];
+      this.totalRecords = res.pagination?.total_records || 0;
+      this.totalPages = res.pagination?.total_pages || 1;
     } catch (e: any) {
       this.error = e.response?.data?.message || 'No se pudo cargar las atracciones';
     } finally {

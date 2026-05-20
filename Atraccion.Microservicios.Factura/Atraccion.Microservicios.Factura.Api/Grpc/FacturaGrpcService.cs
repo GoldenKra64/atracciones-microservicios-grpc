@@ -63,12 +63,19 @@ namespace Atraccion.Microservicios.Factura.Api.Grpc
                 return new GenerateInvoiceResponse
                 {
                     Success = true,
-                    FacId = factura.FacId
+                    FacId = factura.FacId,
+                    FacGuid = factura.FacGuid,
+                    FacNumero = factura.FacNumero,
+                    Total = (double)factura.FacTotal,
+                    FechaEmision = factura.FacFechaEmision.ToString("o"),
+                    Estado = "ACTIVO",
+                    NombreReceptor = factura.FacNombreReceptor ?? "",
+                    CorreoReceptor = factura.FacCorreoReceptor ?? ""
                 };
             }
             catch (Exception ex)
             {
-                // Manejo básico de errores, en producción se recomienda un logger
+                Console.WriteLine(ex);
                 throw new RpcException(new Status(StatusCode.Internal, ex.Message));
             }
         }

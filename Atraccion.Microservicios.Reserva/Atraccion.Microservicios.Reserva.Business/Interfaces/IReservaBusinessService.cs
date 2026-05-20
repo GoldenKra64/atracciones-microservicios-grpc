@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Atraccion.Microservicios.Reserva.Business.DTOs.Factura;
+
 namespace Atraccion.Microservicios.Reserva.Business.Interfaces
 {
     public interface IReservaBusinessService
@@ -23,6 +25,6 @@ namespace Atraccion.Microservicios.Reserva.Business.Interfaces
 
         Task LogicalDeleteAsync(string id);
         Task CancelarAsync(string id, CancelarReservaRequest request);
-        Task ApproveAsync(string id, ConfirmarPagoRequest request);
+        Task<FacturaResponse> ApproveAsync(string id, ConfirmarPagoRequest request);
     }
 }

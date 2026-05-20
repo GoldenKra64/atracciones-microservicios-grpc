@@ -35,14 +35,14 @@ export class AtraccionesComponent implements OnInit {
       if (params.Disponible === '') delete params.Disponible;
       else params.Disponible = params.Disponible === 'true';
       const res = await this.svc.getAtracciones(params);
-      this.items = (res.items || []).map((item: any) => ({
+      this.items = (res.data || []).map((item: any) => ({
         ...item,
-        moneda: 'USD'
+        moneda: item.moneda || 'USD'
       }));
-      this.totalRecords = res.totalRecords;
-      this.totalPages = res.totalPages;
-      this.hasPrev = res.hasPreviousPage;
-      this.hasNext = res.hasNextPage;
+      this.totalRecords = res.pagination?.total_records || 0;
+      this.totalPages = res.pagination?.total_pages || 0;
+      this.hasPrev = res.pagination ? res.pagination.prev_page !== null : false;
+      this.hasNext = res.pagination ? res.pagination.next_page !== null : false;
     } catch (e: any) {
       this.error = 'No se pudo cargar las atracciones. Verifica la conexión con el servidor.';
     } finally {

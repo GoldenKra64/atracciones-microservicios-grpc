@@ -71,7 +71,7 @@ export class AtraccionesService {
     const params: any = {};
     Object.entries(filtros).forEach(([k, v]) => { if (v !== '' && v !== undefined) params[k] = v; });
     const res = await api.get('/atracciones', { params });
-    return res.data.data;
+    return res.data;
   }
 
   async getAtraccion(id: string): Promise<AtraccionDetalle> {

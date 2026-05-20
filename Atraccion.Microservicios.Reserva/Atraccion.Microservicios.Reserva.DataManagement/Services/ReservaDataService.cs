@@ -131,7 +131,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
             await _uow.ReservaRepository.SoftDeleteAsync(reservaId);
         }
 
-        public async Task ApproveAsync(string id, string? nombreReceptor, string? correoReceptor)
+        public async Task<Atraccion.Microservicios.Reserva.DataManagement.Protos.GenerateInvoiceResponse> ApproveAsync(string id, string? nombreReceptor, string? correoReceptor)
         {
             await _uow.BeginTransactionAsync();
             try
@@ -165,7 +165,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 await _uow.ReservaRepository.ApproveAsync(id);
 
                 // 🔄 Llamada "gRPC" al microservicio de Factura
-                await _facturaIntegration.GenerateInvoiceAsync(new GenerateInvoiceDto
+                var response = await _facturaIntegration.GenerateInvoiceAsync(new GenerateInvoiceDto
                 {
                     RevId = entity.RevId,
                     CliId = entity.CliId ?? 0,
@@ -176,6 +176,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 });
 
                 await _uow.CommitAsync();
+                return response;
             }
             catch
             {

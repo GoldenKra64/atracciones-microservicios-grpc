@@ -14,9 +14,9 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
             _client = client;
         }
 
-        public async Task GenerateInvoiceAsync(GenerateInvoiceDto dto)
+        public async Task<GenerateInvoiceResponse> GenerateInvoiceAsync(GenerateInvoiceDto dto)
         {
-            await _client.GenerateInvoiceAsync(new GenerateInvoiceRequest
+            return await _client.GenerateInvoiceAsync(new GenerateInvoiceRequest
             {
                 RevId = dto.RevId,
                 CliId = dto.CliId,
