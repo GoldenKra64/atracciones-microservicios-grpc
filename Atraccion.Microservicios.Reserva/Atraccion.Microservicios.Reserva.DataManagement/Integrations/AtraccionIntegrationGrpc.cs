@@ -37,7 +37,8 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
                 CuposDisponibles = response.CuposDisponibles,
                 HorFecha = response.HorFecha,
                 HorHoraInicio = response.HorHoraInicio,
-                HorHoraFin = response.HorHoraFin
+                HorHoraFin = response.HorHoraFin,
+                AtNombre = response.AtNombre
             };
         }
 
@@ -54,8 +55,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
                 TicTitulo = response.TicTitulo,
                 TicPrecio = response.TicPrecio,
                 TicTipoParticipante = response.TicTipoParticipante,
-                HorId = response.HorId,
-                AtNombre = response.AtNombre
+                HorId = response.HorId
             };
         }
 
@@ -72,8 +72,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
                 TicTitulo = response.TicTitulo,
                 TicPrecio = response.TicPrecio,
                 TicTipoParticipante = response.TicTipoParticipante,
-                HorId = response.HorId,
-                AtNombre = response.AtNombre
+                HorId = response.HorId
             };
         }
     }
