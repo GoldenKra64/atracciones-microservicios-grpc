@@ -21,7 +21,6 @@ message TicketResponse {
   double ticPrecio = 3;
   string ticTipoParticipante = 4;
   int32 horId = 5;
-  string atNombre = 6;
 }
 
 message HorarioRequest {
@@ -35,6 +34,7 @@ message HorarioResponse {
   string horFecha = 4;
   string horHoraInicio = 5;
   string horHoraFin = 6;
+  string atNombre = 7;
 }
 
 message ConsumeCapacityRequest {

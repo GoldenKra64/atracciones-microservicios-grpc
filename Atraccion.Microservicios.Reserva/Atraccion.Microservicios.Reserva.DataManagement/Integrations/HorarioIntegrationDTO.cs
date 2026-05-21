@@ -14,5 +14,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
         public string HorFecha { get; set; }
         public string HorHoraInicio { get; set; }
         public string HorHoraFin { get; set; }
+
+        public string AtNombre { get; set; } = string.Empty;
     }
 }

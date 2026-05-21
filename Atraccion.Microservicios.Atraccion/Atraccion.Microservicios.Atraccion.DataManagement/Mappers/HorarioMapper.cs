@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
+using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Resena;
@@ -23,7 +23,8 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                 Fecha = entity.HorFecha.ToString("yyyy-MM-dd"),
                 HoraInicio = entity.HorHoraInicio.ToString(@"hh\:mm"),
                 HoraFin = entity.HorHoraFin?.ToString(@"hh\:mm"),
-                Cupos = entity.HorCuposDisponibles
+                Cupos = entity.HorCuposDisponibles,
+                NombreAtraccion = entity.Atraccion?.AtNombre
             };
         }
         public static Horario ToEntity(HorarioModel model)

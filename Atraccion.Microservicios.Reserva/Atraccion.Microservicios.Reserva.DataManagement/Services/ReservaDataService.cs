@@ -93,7 +93,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 }
 
                 entity.HorId = horario.HorId;
-                entity.AtNombre = atraccionNombre;
+                entity.AtNombre = !string.IsNullOrEmpty(horario.AtNombre) ? horario.AtNombre : atraccionNombre;
 
                 // Totals
                 entity.RevSubtotal = entity.Detalles.Sum(x => x.TicSubtotal);

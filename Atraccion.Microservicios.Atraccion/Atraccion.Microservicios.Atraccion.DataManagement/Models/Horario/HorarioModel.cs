@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario
         public string HoraInicio { get; set; }      // "HH:mm"
         public string? HoraFin { get; set; }        // "HH:mm"
         public int Cupos { get; set; }
+        public string? NombreAtraccion { get; set; }
         public List<TicketModel> Tickets { get; set; } = new List<TicketModel>();
         public AtraccionModel Atraccion { get; set; }
     }
