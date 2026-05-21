@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Api.Protos;
+using Atraccion.Microservicios.Atraccion.Api.Protos;
 using Atraccion.Microservicios.Atraccion.DataManagement.Interfaces;
 using Grpc.Core;
 using System;
@@ -44,7 +44,8 @@ namespace Atraccion.Microservicios.Atraccion.Api.Grpc
                     TicTitulo = ticket.Nombre,
                     TicPrecio = (double) ticket.Precio,
                     TicTipoParticipante = ticket.Tipo,
-                    HorId = ticket.HorarioId
+                    HorId = ticket.HorarioId,
+                    AtNombre = ticket.Horario?.Atraccion?.AtNombre ?? string.Empty
                 };
             }
             catch (Exception ex)

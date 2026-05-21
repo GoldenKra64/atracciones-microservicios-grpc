@@ -46,30 +46,18 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
                 var dataBooking = await _service.GetAllBookingAsync(page, limit);
                 
                 var requestUrlBooking = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-                string? nextPageBooking = dataBooking.PageNumber < dataBooking.TotalPages
-                    ? $"{requestUrlBooking}?page={dataBooking.PageNumber + 1}&limit={dataBooking.PageSize}"
-                    : null;
-                string? prevPageBooking = dataBooking.PageNumber > 1
-                    ? $"{requestUrlBooking}?page={dataBooking.PageNumber - 1}&limit={dataBooking.PageSize}"
-                    : null;
 
                 var responseBooking = new
                 {
                     status = 200,
                     message = "Operacion exitosa",
-                    data = new 
-                    {
-                        total = dataBooking.TotalRecords,
-                        reservas = dataBooking.Items
-                    },
+                    data = dataBooking.Items,
                     pagination = new
                     {
-                        total_records = dataBooking.TotalRecords,
+                        total = dataBooking.TotalRecords,
                         page = dataBooking.PageNumber,
                         limit = dataBooking.PageSize,
-                        total_pages = dataBooking.TotalPages,
-                        next_page = nextPageBooking,
-                        prev_page = prevPageBooking
+                        total_pages = dataBooking.TotalPages
                     },
                     _links = new { self = $"{requestUrlBooking}{Request.QueryString}" }
                 };
@@ -80,30 +68,18 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
             var data = await _service.GetByClienteAsync(int.Parse(clienteId), page, limit);
 
             var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
-            string? nextPage = data.PageNumber < data.TotalPages
-                ? $"{requestUrl}?page={data.PageNumber + 1}&limit={data.PageSize}"
-                : null;
-            string? prevPage = data.PageNumber > 1
-                ? $"{requestUrl}?page={data.PageNumber - 1}&limit={data.PageSize}"
-                : null;
 
             var response = new
             {
                 status = 200,
                 message = "Operacion exitosa",
-                data = new
-                {
-                    total = data.TotalRecords,
-                    reservas = data.Items
-                },
+                data = data.Items,
                 pagination = new
                 {
-                    total_records = data.TotalRecords,
+                    total = data.TotalRecords,
                     page = data.PageNumber,
                     limit = data.PageSize,
-                    total_pages = data.TotalPages,
-                    next_page = nextPage,
-                    prev_page = prevPage
+                    total_pages = data.TotalPages
                 },
                 _links = new { self = $"{requestUrl}{Request.QueryString}" }
             };

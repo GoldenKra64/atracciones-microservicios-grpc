@@ -9,6 +9,7 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Entities
     public class Idioma
     {
         public int IdId { get; set; }
+        public string IdCodigo { get; set; } = null!;
         public string IdNombre { get; set; } = null!;
         public string IdEstado { get; set; } = null!;
         public ICollection<IdiomaAtraccion> IdiomaAtracciones { get; set; } = new List<IdiomaAtraccion>();

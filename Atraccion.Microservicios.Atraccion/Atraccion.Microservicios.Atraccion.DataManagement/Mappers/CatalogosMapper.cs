@@ -46,6 +46,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
             return new IdiomaModel
             {
                 Id = entity.IdId,
+                Codigo = entity.IdCodigo,
                 Nombre = entity.IdNombre
             };
         }

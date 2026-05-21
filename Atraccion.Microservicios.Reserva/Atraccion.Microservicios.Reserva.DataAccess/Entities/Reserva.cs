@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,9 +22,12 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Entities
         public double RevTotal { get; set; }
         public string RevCanal { get; set; } = null!;
 
+        public int? HorId { get; set; }
         public string? HorFecha { get; set; }
         public string? HorHoraInicio { get; set; }
         public string? HorHoraFin { get; set; }
+
+        public string? AtNombre { get; set; }
 
         public string RevUsuarioIngreso { get; set; } = null!;
         public string RevIpIngreso { get; set; } = null!;

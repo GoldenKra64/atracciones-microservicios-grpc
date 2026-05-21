@@ -29,7 +29,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Mappers
                 hor_hora_inicio = entity.HorHoraInicio ?? string.Empty,
                 hor_hora_fin = entity.HorHoraFin ?? string.Empty,
 
-                atraccion_nombre = entity.Detalles?.FirstOrDefault()?.TicTitulo ?? string.Empty,
+                atraccion_nombre = entity.AtNombre ?? entity.Detalles?.FirstOrDefault()?.TicTitulo ?? string.Empty,
                 moneda = "USD",
 
                 detalle = entity.Detalles?
@@ -51,6 +51,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Mappers
                 CliId = model.ClienteId,
                 RevGuid = Guid.NewGuid().ToString(),
                 RevCodigo = $"R-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
+                HorId = horario.HorId,
                 HorHoraInicio = horario.HorHoraInicio.ToString(),
                 HorFecha = horario.HorFecha.ToString(),
                 HorHoraFin = horario.HorHoraFin.ToString() ?? "",

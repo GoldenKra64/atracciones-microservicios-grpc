@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Context;
+using Atraccion.Microservicios.Atraccion.DataAccess.Context;
 using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataAccess.Queries.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +26,20 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries
 
         public async Task<Ticket?> GetByIdAsync(int id)
         {
-            return await _context.Tickets.Where(c => c.TicId == id).FirstOrDefaultAsync();
+            return await _context.Tickets
+                .Include(t => t.Horario)
+                    .ThenInclude(h => h.Atraccion)
+                .Where(c => c.TicId == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Ticket?> GetByGuidAsync(string id)
         {
-            return await _context.Tickets.Where(c => c.TicGuid == id).FirstOrDefaultAsync();
+            return await _context.Tickets
+                .Include(t => t.Horario)
+                    .ThenInclude(h => h.Atraccion)
+                .Where(c => c.TicGuid == id)
+                .FirstOrDefaultAsync();
         }
     }
 }
