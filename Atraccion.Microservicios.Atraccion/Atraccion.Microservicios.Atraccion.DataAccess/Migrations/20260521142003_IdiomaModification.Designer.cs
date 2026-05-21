@@ -3,6 +3,7 @@ using System;
 using Atraccion.Microservicios.Atraccion.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Atraccion.Microservicios.Atraccion.DataAccess.Migrations
 {
     [DbContext(typeof(AtraccionesDbContext))]
-    partial class AtraccionesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260521142003_IdiomaModification")]
+    partial class IdiomaModification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

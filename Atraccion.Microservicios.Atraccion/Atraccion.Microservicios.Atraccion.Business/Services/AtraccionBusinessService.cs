@@ -1,7 +1,8 @@
-using Atraccion.Microservicios.Atraccion.Business.DTOs;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Filters;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Imagen;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
@@ -114,7 +115,12 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                     nombre = g.Key,
                     tagname = g.Key.ToLower().Replace(" ", "_"),
                     productCount = g.Count(),
-                    image = new DTOs.Imagen.ImageFilter() // will use default placeholder url
+                    image = g.FirstOrDefault()?.Destino?.ImagenUrl != null
+                        ? new ImageFilter
+                        {
+                            Uri = g.First().Destino.ImagenUrl
+                        }
+                        : null
                 })
                 .OrderByDescending(o => o.productCount)
                 .ToList();
@@ -146,8 +152,8 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
 
             result.labelFilters = new List<OpcionFiltro>
             {
-                new OpcionFiltro { nombre = "free_cancellation", tagname = "free_cancellation", productCount = freeCancelCount },
-                new OpcionFiltro { nombre = "skip_the_line", tagname = "skip_the_line", productCount = skipLineCount }
+                new OpcionFiltro { nombre = "Cancelacion gratuita", tagname = "free_cancellation", productCount = freeCancelCount },
+                new OpcionFiltro { nombre = "Sin fila", tagname = "skip_the_line", productCount = skipLineCount }
             };
 
             // Supported Language Filters

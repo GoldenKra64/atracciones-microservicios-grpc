@@ -65,11 +65,16 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 if (horario == null) throw new ArgumentNullException(nameof(horario));
 
                 var entity = ReservaMapper.ToEntity(model, horario);
+                string atraccionNombre = string.Empty;
+
                 foreach (var linea in model.Lineas)
                 {
                     var ticketInfo = await _atraccionIntegration.GetTicketInfoByGuidAsync(linea.TicketId);
                     if (ticketInfo == null) throw new Exception($"Ticket {linea.TicketId} no encontrado");
 
+                    if (string.IsNullOrEmpty(atraccionNombre))
+                        atraccionNombre = ticketInfo.AtNombre;
+                    
                     var det = new DetalleReserva
                     {
                         DetRevGuid = Guid.NewGuid().ToString(),
@@ -86,6 +91,9 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                     entity.Detalles.Add(det);
                 }
+
+                entity.HorId = horario.HorId;
+                entity.AtNombre = atraccionNombre;
 
                 // Totals
                 entity.RevSubtotal = entity.Detalles.Sum(x => x.TicSubtotal);
@@ -144,25 +152,21 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 if (entity.RevEstado == "APR")
                     throw new Exception("La reserva ya se encuentra aprobada.");
 
-                // Asumimos que podemos obtener el HorId desde algún lado, en el diseño real
-                // deberías guardar el HorId directamente en la Reserva para no perderlo.
-                // Por ahora, asumiremos que se guardó en `entity` o hacemos una consulta inversa,
-                // pero la lógica dicta que Reserva DEBE tener el HorId.
-
-                // MOCK: Para que compile, suponemos que todas las líneas usan el mismo horario.
-                // En tu diseño, agregaste HorFecha y HorHoraInicio, pero no HorId. 
-                // Necesitarás agregar HorId a Reserva.cs.
-
                 entity.RevEstado = "APR";
 
-                // 🔄 Llamada "gRPC" al microservicio de Atraccion (Consumir capacidad)
-                foreach (var det in entity.Detalles)
-                {
-                    // Nota: Idealmente deberías tener el HorId en DetalleReserva o Reserva.
-                    // Para evitar que falle, pasamos un ID dummy u obtenemos el ticket de nuevo
-                    var ticketInfo = await _atraccionIntegration.GetTicketInfoAsync(det.TicId);
-                    await _atraccionIntegration.ConsumeCapacityAsync(ticketInfo.HorId, det.TicCantidad);
+                int horId = entity.HorId ?? 0;
+                if (horId == 0) {
+                    var firstDet = entity.Detalles.FirstOrDefault();
+                    if (firstDet != null)
+                    {
+                        var ticketInfo = await _atraccionIntegration.GetTicketInfoAsync(firstDet.TicId);
+                        horId = ticketInfo.HorId;
+                    }
                 }
+                // Consumir capacidad una sola vez por el total de personas
+                int totalPersonas = entity.Detalles.Sum(d => d.TicCantidad);
+                if (horId > 0 && totalPersonas > 0)
+                    await _atraccionIntegration.ConsumeCapacityAsync(horId, totalPersonas);
 
                 await _uow.ReservaRepository.ApproveAsync(id);
 

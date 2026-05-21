@@ -31,6 +31,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             return new IdiomaResponse
             {
                 Id = model.Id,
+                Codigo = model.Codigo,
                 Nombre = model.Nombre
             };
         }

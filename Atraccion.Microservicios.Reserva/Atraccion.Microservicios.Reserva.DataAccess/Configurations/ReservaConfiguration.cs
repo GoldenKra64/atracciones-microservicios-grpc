@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -76,6 +76,9 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Configurations
             builder.Property(e => e.RevEstado)
                    .HasColumnName("rev_estado")
                    .HasMaxLength(3);
+
+            builder.Property(e => e.HorId).HasColumnName("hor_id").IsRequired(false);
+            builder.Property(e => e.AtNombre).HasColumnName("at_nombre").HasMaxLength(200).IsRequired(false);
 
             builder.HasMany(x => x.Detalles)
                 .WithOne(d => d.Reserva)

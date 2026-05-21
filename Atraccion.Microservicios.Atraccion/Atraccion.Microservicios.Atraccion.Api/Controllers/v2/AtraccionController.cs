@@ -70,11 +70,11 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
                 },
                 sorters = new object[]
                 {
-                    new { name = "Trending", value = "trending" },
-                    new { name = "Lowest Price", value = "lowest_price" },
-                    new { name = "Highest Weighted Rating", value = "highest_weighted_rating" }
+                    new { name = "Mas populares", value = "trending" },
+                    new { name = "Menor precio", value = "lowest_price" },
+                    new { name = "Mejor calificacion", value = "highest_weighted_rating" }
                 },
-                defaultSorter = new { name = "Recommended", value = "recommended" },
+                defaultSorter = new { name = "Mas populares", value = "trending" },
                 _links = new { self = requestUrl },
             };
 

@@ -18,6 +18,7 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Configurations
             builder.HasKey(x => x.IdId);
 
             builder.Property(e => e.IdId).HasColumnName("id_id");
+            builder.Property(e => e.IdCodigo).HasColumnName("id_codigo");
             builder.Property(e => e.IdNombre).HasColumnName("id_descripcion");
             builder.Property(e => e.IdEstado).HasColumnName("id_estado");
 

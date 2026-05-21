@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +13,6 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Integrations
         public double TicPrecio { get; set; }
         public string TicTipoParticipante { get; set; }
         public int HorId { get; set; }
+        public string AtNombre { get; set; } = string.Empty;
     }
 }
