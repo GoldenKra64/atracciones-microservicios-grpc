@@ -118,7 +118,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                     image = g.FirstOrDefault()?.Destino?.ImagenUrl != null
                         ? new ImageFilter
                         {
-                            Uri = g.First().Destino.ImagenUrl
+                            Uri = g.First().Destino?.ImagenUrl ?? null
                         }
                         : null
                 })

@@ -21,10 +21,6 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Configurations
             builder.Property(e => e.IdCodigo).HasColumnName("id_codigo");
             builder.Property(e => e.IdNombre).HasColumnName("id_descripcion");
             builder.Property(e => e.IdEstado).HasColumnName("id_estado");
-
-            builder.Property(x => x.IdNombre)
-                .IsRequired()
-                .HasMaxLength(2);
         }
     }
 }
