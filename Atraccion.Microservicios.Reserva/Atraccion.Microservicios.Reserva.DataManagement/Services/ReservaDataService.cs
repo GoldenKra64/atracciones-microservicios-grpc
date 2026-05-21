@@ -74,6 +74,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                     {
                         DetRevGuid = Guid.NewGuid().ToString(),
                         TicId = ticketInfo.TicId,
+                        TicGuid = linea.TicketId,
                         TicTipoParticipante = ticketInfo.TicTipoParticipante,
                         TicCantidad = linea.Cantidad,
                         TicPrecioUnitario = ticketInfo.TicPrecio,
@@ -240,6 +241,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                         {
                             DetRevGuid = Guid.NewGuid().ToString(),
                             TicId = ticket.TicId,
+                            TicGuid = linea.TicketId,
                             TicTipoParticipante = ticket.TicTipoParticipante,
                             TicCantidad = linea.Cantidad,
                             TicPrecioUnitario = ticket.TicPrecio,

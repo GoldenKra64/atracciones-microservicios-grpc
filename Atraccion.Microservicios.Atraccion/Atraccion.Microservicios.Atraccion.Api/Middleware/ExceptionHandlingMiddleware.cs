@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Api.Models.Common;
+using Atraccion.Microservicios.Atraccion.Api.Models.Common;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using System.Net;
 using System.Text.Json;
@@ -28,10 +28,10 @@ namespace Atraccion.Microservicios.Atraccion.Api.Middleware
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var traceId = context.TraceIdentifier;
             var statusCode = (int)HttpStatusCode.InternalServerError;
             var message = "Error interno del servidor";
             var errors = new List<string> { };
+            var path = context.Request.Path.Value ?? "";
 
             if (exception is ValidationException valExcept)
             {
@@ -65,14 +65,16 @@ namespace Atraccion.Microservicios.Atraccion.Api.Middleware
             }
             else
             {
-                errors.Add(exception.InnerException?.ToString() ?? exception.ToString());
+                // In production, do not return stack traces
+                // Consider logging exception here
+                errors.Add("Se ha producido un error inesperado.");
             }
 
             var response = ApiErrorResponse.Fail(
                 message,
                 errors,
                 statusCode,
-                traceId
+                path
             );
 
             context.Response.ContentType = "application/json";

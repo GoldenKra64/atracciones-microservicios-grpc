@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs;
+using Atraccion.Microservicios.Atraccion.Business.DTOs;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Filters;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
@@ -113,7 +113,8 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                 {
                     nombre = g.Key,
                     tagname = g.Key.ToLower().Replace(" ", "_"),
-                    productCount = g.Count()
+                    productCount = g.Count(),
+                    image = new DTOs.Imagen.ImageFilter() // will use default placeholder url
                 })
                 .OrderByDescending(o => o.productCount)
                 .ToList();
@@ -134,19 +135,20 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                 .ToList();
 
             // Label Filters
-            result.labelFilters = atracciones
+            var tagsInDb = atracciones
                 .Where(a => a?.TagAtracciones != null)
                 .SelectMany(a => a!.TagAtracciones)
-                .Where(t => !string.IsNullOrEmpty(t.Nombre) && (t.Nombre == "free_cancellation" || t.Nombre == "skip_the_line"))
-                .GroupBy(t => t.Nombre)
-                .Select(g => new OpcionFiltro
-                {
-                    nombre = g.Key,
-                    tagname = g.Key.ToLower().Replace(" ", "_"),
-                    productCount = g.Count()
-                })
-                .OrderByDescending(o => o.productCount)
+                .Where(t => !string.IsNullOrEmpty(t.Nombre))
                 .ToList();
+
+            int freeCancelCount = tagsInDb.Count(t => t.Nombre == "free_cancellation");
+            int skipLineCount = tagsInDb.Count(t => t.Nombre == "skip_the_line");
+
+            result.labelFilters = new List<OpcionFiltro>
+            {
+                new OpcionFiltro { nombre = "free_cancellation", tagname = "free_cancellation", productCount = freeCancelCount },
+                new OpcionFiltro { nombre = "skip_the_line", tagname = "skip_the_line", productCount = skipLineCount }
+            };
 
             // Supported Language Filters
             result.supportedLanguageFilters = atracciones
@@ -156,8 +158,8 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
                 .GroupBy(i => i.Nombre)
                 .Select(g => new OpcionFiltro
                 {
-                    nombre = g.Key,
-                    tagname = g.Key.ToLower().Replace(" ", "_"),
+                    nombre = MapLanguageCodeToName(g.Key),
+                    tagname = g.Key.ToLower(),
                     productCount = g.Count()
                 })
                 .OrderByDescending(o => o.productCount)
@@ -174,7 +176,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
             result.timeOfDayFilter = new List<OpcionFiltro>
             {
                 new OpcionFiltro { nombre = "Mañana (05:00-12:00)", tagname = "05:00-12:00", productCount = 0 },
-                new OpcionFiltro { nombre = "Tarde (13:00-18:00)", tagname = "13:00-18:00", productCount = 0 },
+                new OpcionFiltro { nombre = "Tarde (12:00-18:00)", tagname = "12:00-18:00", productCount = 0 },
                 new OpcionFiltro { nombre = "Noche (18:00-05:00)", tagname = "18:00-05:00", productCount = 0 }
             };
 
@@ -210,6 +212,20 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
             var data = await _dataService.GetByIdAsync(guid);
             if (data == null) throw new NotFoundException("Atracción", guid);
             return AtraccionBusinessMapper.MapTicketsByHorarioToResponse(data, horarioId);
+        }
+
+        private string MapLanguageCodeToName(string code)
+        {
+            return code.ToLower() switch
+            {
+                "es" => "Español",
+                "en" => "Inglés",
+                "fr" => "Francés",
+                "de" => "Alemán",
+                "it" => "Italiano",
+                "pt" => "Portugués",
+                _ => code
+            };
         }
     }
 }

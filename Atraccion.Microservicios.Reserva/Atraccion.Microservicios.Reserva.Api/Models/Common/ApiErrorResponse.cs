@@ -1,24 +1,33 @@
-﻿namespace Atraccion.Microservicios.Reserva.Api.Models.Common
+using System.Text.Json.Serialization;
+
+namespace Atraccion.Microservicios.Reserva.Api.Models.Common
 {
     public class ApiErrorResponse
     {
+        [JsonPropertyName("status")]
         public int Status { get; set; }
-        public string Error { get; set; } = "Ocurrió un error";
 
+        [JsonPropertyName("message")]
+        public string Message { get; set; } = "Ocurrió un error";
+
+        [JsonPropertyName("details")]
         public List<string> Details { get; set; } = new();
 
-        public string? TraceId { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        [JsonPropertyName("timestamp")]
+        public string Timestamp { get; set; } = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
-        public static ApiErrorResponse Fail(int status, string message, List<string>? errors = null, string? traceId = null)
+        [JsonPropertyName("path")]
+        public string Path { get; set; } = string.Empty;
+
+        public static ApiErrorResponse Fail(int status, string message, List<string>? errors = null, string path = "")
         {
             return new ApiErrorResponse
             {
-                Error = message,
+                Message = message,
                 Status = status,
                 Details = errors ?? new List<string>(),
-                TraceId = traceId,
-                Timestamp = DateTime.Now
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                Path = path
             };
         }
     }
