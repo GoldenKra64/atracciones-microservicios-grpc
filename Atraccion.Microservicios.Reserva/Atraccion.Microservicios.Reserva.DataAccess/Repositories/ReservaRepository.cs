@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.DataAccess.Context;
+using Atraccion.Microservicios.Reserva.DataAccess.Context;
 using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using Atraccion.Microservicios.Reserva.DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +47,7 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ApproveAsync(string id)
+        public async Task ApproveAsync(string id, string? atNombre = null)
         {
             var reserva = await _context.Reservas
                 .Include(r => r.Detalles)
@@ -56,6 +56,9 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Repositories
             if (reserva == null) return;
 
             reserva.RevEstado = "APR";
+
+            if (!string.IsNullOrEmpty(atNombre) && string.IsNullOrEmpty(reserva.AtNombre))
+                reserva.AtNombre = atNombre;
 
             await _context.SaveChangesAsync();
         }

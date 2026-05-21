@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.Business.DTOs;
+using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
 using Atraccion.Microservicios.Reserva.Business.Exceptions;
 using Atraccion.Microservicios.Reserva.Business.Interfaces;
@@ -155,7 +155,7 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
                 Total = invoice.Total,
                 Moneda = "USD",
                 FechaEmision = invoice.FechaEmision,
-                Estado = invoice.Estado,
+                Estado = "A",
                 NombreReceptor = invoice.NombreReceptor,
                 CorreoReceptor = invoice.CorreoReceptor
             };

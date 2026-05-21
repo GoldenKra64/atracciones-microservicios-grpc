@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.DataAccess.Entities;
+using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Repositories.Interfaces
         Task<Reserva.DataAccess.Entities.Reserva> UpdateAsync(Reserva.DataAccess.Entities.Reserva reserva);
         Task SoftDeleteAsync(string id);
         Task DeleteDetalleAsync(DetalleReserva detalle);
-        Task ApproveAsync(string id);
+        Task ApproveAsync(string id, string? atNombre = null);
         Task CancelAsync(string id);
     }
 }

@@ -154,23 +154,53 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                 entity.RevEstado = "APR";
 
+                // Intentar consumir capacidad — si falla por cupos insuficientes, se ignora
                 int horId = entity.HorId ?? 0;
-                if (horId == 0) {
+                if (horId == 0)
+                {
                     var firstDet = entity.Detalles.FirstOrDefault();
                     if (firstDet != null)
                     {
-                        var ticketInfo = await _atraccionIntegration.GetTicketInfoAsync(firstDet.TicId);
-                        horId = ticketInfo.HorId;
+                        try
+                        {
+                            var ticketInfo = await _atraccionIntegration.GetTicketInfoAsync(firstDet.TicId);
+                            horId = ticketInfo.HorId;
+                        }
+                        catch { /* ignorar — fallback */ }
                     }
                 }
-                // Consumir capacidad una sola vez por el total de personas
+
                 int totalPersonas = entity.Detalles.Sum(d => d.TicCantidad);
                 if (horId > 0 && totalPersonas > 0)
-                    await _atraccionIntegration.ConsumeCapacityAsync(horId, totalPersonas);
+                {
+                    try
+                    {
+                        await _atraccionIntegration.ConsumeCapacityAsync(horId, totalPersonas);
+                    }
+                    catch
+                    {
+                        // Ignorar errores de cupos — la reserva se aprueba de todas formas
+                    }
+                }
 
-                await _uow.ReservaRepository.ApproveAsync(id);
+                // Obtener nombre de la atraccion si no está guardado (reservas antiguas)
+                string? atNombre = entity.AtNombre;
+                if (string.IsNullOrEmpty(atNombre))
+                {
+                    var firstDet = entity.Detalles.FirstOrDefault();
+                    if (firstDet != null)
+                    {
+                        try
+                        {
+                            var tckInfo = await _atraccionIntegration.GetTicketInfoAsync(firstDet.TicId);
+                            atNombre = tckInfo.AtNombre;
+                        }
+                        catch { /* ignorar */ }
+                    }
+                }
 
-                // 🔄 Llamada "gRPC" al microservicio de Factura
+                await _uow.ReservaRepository.ApproveAsync(id, atNombre);
+
                 var response = await _facturaIntegration.GenerateInvoiceAsync(new GenerateInvoiceDto
                 {
                     RevId = entity.RevId,
