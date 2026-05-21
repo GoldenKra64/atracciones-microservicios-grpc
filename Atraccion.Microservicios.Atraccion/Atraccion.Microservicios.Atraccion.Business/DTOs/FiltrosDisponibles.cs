@@ -16,7 +16,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs
         public List<OpcionFiltro> typeFilters { get; set; } = new List<OpcionFiltro>();
         public List<OpcionFiltro> labelFilters { get; set; } = new List<OpcionFiltro>();
         
-        [JsonPropertyName("minRatingFilters")]
+        [JsonPropertyName("minRatingFilter")]
         public List<OpcionFiltro> minRatingFilter { get; set; } = new List<OpcionFiltro>();
         
         [JsonPropertyName("timeOfDayFilters")]

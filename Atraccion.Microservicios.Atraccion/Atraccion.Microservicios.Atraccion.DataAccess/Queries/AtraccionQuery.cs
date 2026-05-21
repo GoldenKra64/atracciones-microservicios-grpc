@@ -180,12 +180,12 @@ namespace Atraccion.Microservicios.Atraccion.DataAccess.Queries
 
             if (tipo != null) // Categoria
             {
-                query = query.Where(x => x.CategoriaAtracciones.Any(ca => ca.Categoria.CatNombre == tipo.ToLower()));
+                query = query.Where(x => x.CategoriaAtracciones.Any(ca => ca.Categoria.CatNombre.ToLower() == tipo.ToLower()));
             }
 
             if (subTipo != null) // Tag
             {
-                query = query.Where(x => x.TagAtracciones.Any(ta => ta.Tag.TagDescription == subTipo.ToLower()));
+                query = query.Where(x => x.TagAtracciones.Any(ta => ta.Tag.TagDescription.ToLower() == subTipo.ToLower()));
             }
 
             // 📊 Total

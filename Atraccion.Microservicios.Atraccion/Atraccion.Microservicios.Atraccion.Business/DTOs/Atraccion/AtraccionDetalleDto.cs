@@ -40,7 +40,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion
         public Boolean incluye_transporte { get; set; }
         public Boolean incluye_acompaniante { get; set; }
         public List<TicketDto> tickets { get; set; } = new();
-        public List<HorarioDto> horarios_proximos { get; set; } = new();
 
         // 🔗 HATEOAS
         [JsonPropertyName("_links")]

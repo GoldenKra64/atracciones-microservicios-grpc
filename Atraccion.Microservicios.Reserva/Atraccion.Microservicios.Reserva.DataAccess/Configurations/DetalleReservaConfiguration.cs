@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.DataAccess.Entities;
+using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -23,6 +23,7 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Configurations
 
             builder.Property(e => e.RevId).HasColumnName("rev_id");
             builder.Property(e => e.TicId).HasColumnName("tck_id");
+            builder.Property(e => e.TicGuid).HasColumnName("tck_guid").IsRequired(false);
 
             builder.Property(e => e.TicTipoParticipante).HasColumnName("rdet_tipo_participante");
             builder.Property(e => e.TicPrecioUnitario).HasColumnName("rdet_precio_unit");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -13,6 +13,7 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Entities
 
         public int RevId { get; set; }
         public int TicId { get; set; }
+        public string TicGuid { get; set; } = null!;
 
         public string? TicTipoParticipante { get; set; }
         public string TicTitulo { get; set; } = null!;

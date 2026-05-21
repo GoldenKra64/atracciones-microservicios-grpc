@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.DataAccess.Entities;
+using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using Atraccion.Microservicios.Reserva.DataManagement.Integrations;
 using Atraccion.Microservicios.Reserva.DataManagement.Models.Reserva;
 using System;
@@ -20,7 +20,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Mappers
                 rev_codigo = entity.RevCodigo,
 
                 cli_id = entity.CliId,
-                rev_fecha_reserva_utc = entity.RevFechaReservaUtc.ToShortDateString(),
+                rev_fecha_reserva_utc = entity.RevFechaReservaUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                 rev_subtotal = entity.RevSubtotal,
                 rev_valor_iva = entity.RevValorIva,
                 rev_total = entity.RevTotal,
@@ -35,7 +35,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Mappers
                 detalle = entity.Detalles?
                     .Select(d => new DetalleReservaModel
                     {
-                        tck_guid = d.TicId.ToString(),
+                        tck_guid = d.TicGuid ?? string.Empty,
                         tck_tipo_participante = d.TicTipoParticipante,
                         cantidad = d.TicCantidad,
                         precio_unit = d.TicPrecioUnitario,

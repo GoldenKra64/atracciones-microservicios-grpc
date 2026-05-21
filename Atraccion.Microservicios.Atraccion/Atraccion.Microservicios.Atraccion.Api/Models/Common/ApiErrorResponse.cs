@@ -1,27 +1,33 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.Json.Serialization;
 
 namespace Atraccion.Microservicios.Atraccion.Api.Models.Common
 {
     public class ApiErrorResponse
     {
-        public bool Success { get; set; } = false;
+        [JsonPropertyName("status")]
         public int Status { get; set; } = 400;
-        public string Error { get; set; } = "Ocurrió un error";
 
+        [JsonPropertyName("message")]
+        public string Message { get; set; } = "Ocurrió un error";
+
+        [JsonPropertyName("details")]
         public List<string> Details { get; set; } = new();
-        public string Timestamp { get; set; }
-        public string? TraceId { get; set; }
 
-        public static ApiErrorResponse Fail(string message, List<string>? errors = null, int status = 400, string? traceId = null)
+        [JsonPropertyName("timestamp")]
+        public string Timestamp { get; set; }
+
+        [JsonPropertyName("path")]
+        public string Path { get; set; } = string.Empty;
+
+        public static ApiErrorResponse Fail(string message, List<string>? errors = null, int status = 400, string path = "")
         {
             return new ApiErrorResponse
             {
                 Status = status,
-                Error = message,
+                Message = message,
                 Details = errors ?? new List<string>(),
-                Timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff"),
-                TraceId = traceId
+                Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                Path = path
             };
         }
     }

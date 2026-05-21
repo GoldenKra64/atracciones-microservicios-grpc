@@ -1,4 +1,4 @@
-﻿using Asp.Versioning;
+using Asp.Versioning;
 using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
@@ -56,8 +56,12 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
                 var responseBooking = new
                 {
                     status = 200,
-                    message = "Listado de reservas del cliente",
-                    data = dataBooking.Items,
+                    message = "Operacion exitosa",
+                    data = new 
+                    {
+                        total = dataBooking.TotalRecords,
+                        reservas = dataBooking.Items
+                    },
                     pagination = new
                     {
                         total_records = dataBooking.TotalRecords,
@@ -66,7 +70,8 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
                         total_pages = dataBooking.TotalPages,
                         next_page = nextPageBooking,
                         prev_page = prevPageBooking
-                    }
+                    },
+                    _links = new { self = $"{requestUrlBooking}{Request.QueryString}" }
                 };
 
                 return Ok(responseBooking);
@@ -85,8 +90,12 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
             var response = new
             {
                 status = 200,
-                message = "Listado de reservas del cliente",
-                data = data.Items,
+                message = "Operacion exitosa",
+                data = new
+                {
+                    total = data.TotalRecords,
+                    reservas = data.Items
+                },
                 pagination = new
                 {
                     total_records = data.TotalRecords,
@@ -95,7 +104,8 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
                     total_pages = data.TotalPages,
                     next_page = nextPage,
                     prev_page = prevPage
-                }
+                },
+                _links = new { self = $"{requestUrl}{Request.QueryString}" }
             };
 
             return Ok(response);

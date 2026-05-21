@@ -151,7 +151,10 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             var tipoTagname = parentCat?.Nombre.ToLower() ?? string.Empty;
 
             var subtipoNombre = childCat?.Nombre;
+            if (string.IsNullOrWhiteSpace(subtipoNombre)) subtipoNombre = null;
+            
             var subtipoTagname = childCat?.Nombre.ToLower();
+            if (string.IsNullOrWhiteSpace(subtipoTagname)) subtipoTagname = null;
 
             var etiquetas = model.TagAtracciones?
                 .Select(i => i.Nombre)
@@ -188,7 +191,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                         if (!DateTime.TryParse(h.Fecha, out var dt)) return false;
                         return dt == nowDate;
                     }),
-                    proxima_fecha_disponible = proximaFecha ?? string.Empty,
+                    proxima_fecha_disponible = string.IsNullOrWhiteSpace(proximaFecha) ? null : proximaFecha,
                     cupos_disponibles = cuposDisponibles
                 },
                 
@@ -257,15 +260,19 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             var tipoNombre = parentCat?.Nombre ?? string.Empty;
             var tipoTagname = parentCat?.Nombre.ToLower() ?? string.Empty;
 
-            var subtipoNombre = childCat?.Nombre ?? string.Empty;
-            var subtipoTagname = childCat?.Nombre.ToLower() ?? string.Empty;
+            var subtipoNombre = childCat?.Nombre;
+            if (string.IsNullOrWhiteSpace(subtipoNombre)) subtipoNombre = null;
+            
+            var subtipoTagname = childCat?.Nombre.ToLower();
+            if (string.IsNullOrWhiteSpace(subtipoTagname)) subtipoTagname = null;
 
             var etiquetas = model.TagAtracciones?
                 .Select(i => i.Nombre)
                 .Where(s => !string.IsNullOrWhiteSpace(s))
                 .ToList() ?? new List<string>();
 
-            var imagenPrincipal = model.Imagenes?.FirstOrDefault(i => !string.IsNullOrEmpty(i.Url))?.Url ?? string.Empty;
+            var imagenPrincipal = model.Imagenes?.FirstOrDefault(i => !string.IsNullOrEmpty(i.Url))?.Url;
+            if (string.IsNullOrWhiteSpace(imagenPrincipal)) imagenPrincipal = null;
             
             var descCorta = model.Descripcion ?? string.Empty;
             if (descCorta.Length > 150)
@@ -303,7 +310,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                         if (!DateTime.TryParse(h.Fecha, out var dt)) return false;
                         return dt == nowDate;
                     }),
-                    proxima_fecha_disponible = proximaFecha ?? string.Empty,
+                    proxima_fecha_disponible = string.IsNullOrWhiteSpace(proximaFecha) ? null : proximaFecha,
                     cupos_disponibles = cuposDisponibles
                 },
 
@@ -314,16 +321,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 imagenes = model.Imagenes?.Select(i => i.Url).Where(url => !string.IsNullOrEmpty(url)).ToList() ?? new List<string>(),
                 incluye = model.Incluyes?.Select(i => i.Descripcion).Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>(),
                 no_incluye = model.NoIncluyes?.Select(i => i.Descripcion).Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>(),
-                horarios_proximos = model.Horarios?.Select(h => new HorarioDto
-                {
-                    AtraccionId = h.AtraccionId,
-                    HorarioId = h.HorarioId,
-                    HorarioGuid = h.HorarioGuid,
-                    Cupos = h.Cupos,
-                    Fecha = h.Fecha,
-                    HoraInicio = h.HoraInicio,
-                    HoraFin = h.HoraFin
-                }).ToList() ?? new List<HorarioDto>(),
                 tickets = model.Horarios?.SelectMany(h => h.Tickets ?? new List<TicketModel>())
                     .Select(t => new TicketDto
                     {
@@ -379,7 +376,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
 
         public static List<HorarioDto> MapHorariosToResponse(AtraccionModel model)
         {
-            return model.Horarios?.Select(h => new HorarioDto
+            return model.Horarios?.Where(h => h.Cupos > 0).Select(h => new HorarioDto
             {
                 AtraccionId = h.AtraccionId,
                 HorarioId = h.HorarioId,

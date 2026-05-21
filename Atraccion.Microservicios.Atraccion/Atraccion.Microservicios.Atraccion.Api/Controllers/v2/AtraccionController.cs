@@ -32,7 +32,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
         public async Task<IActionResult> GetById(string id)
         {
             var data = await _service.GetByIdAsync(id);
-            return Ok(ApiResponse<AtraccionDetalleDto>.Ok(data, "Detalle de atracciones obtenido exitosamente"));
+            return Ok(ApiResponse<AtraccionDetalleDto>.Ok(data, "Operacion exitosa"));
         }
 
         [HttpGet("type")]
@@ -49,12 +49,12 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
         {
             var data = await _service.GetPagedV2Async(filtro);
             
-            var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}";
+            var requestUrl = $"{Request.Scheme}://{Request.Host}{Request.Path}{Request.QueryString}";
 
             var response = new
             {
                 status = 200,
-                message = "Consulta exitosa",
+                message = "Operacion exitosa",
                 data = data.Items,
                 pagination = new
                 {
@@ -68,8 +68,13 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
                     filteredProductCount = data.TotalRecords,
                     unfilteredProductCount = data.UnfilteredProductCount
                 },
-                sorters = new List<string>(),
-                defaultSorter = "recommended",
+                sorters = new object[]
+                {
+                    new { name = "Trending", value = "trending" },
+                    new { name = "Lowest Price", value = "lowest_price" },
+                    new { name = "Highest Weighted Rating", value = "highest_weighted_rating" }
+                },
+                defaultSorter = new { name = "Recommended", value = "recommended" },
                 _links = new { self = requestUrl },
             };
 
@@ -80,7 +85,7 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
         public async Task<IActionResult> GetFiltros()
         {
             var data = await _service.GetFiltrosAsync();
-            return Ok(ApiResponse<FiltrosDisponibles>.Ok(data, "Filtros disponibles obtenidos exitosamente"));
+            return Ok(ApiResponse<FiltrosDisponibles>.Ok(data, "Operacion exitosa"));
         }
 
         [HttpGet("internal/{id:guid}")]
@@ -122,21 +127,21 @@ namespace Atraccion.Microservicios.Atraccion.Api.Controllers.v2
         public async Task<IActionResult> GetTicketsForAttraction(string guid)
         {
             var data = await _service.GetTicketsByAttraction(guid);
-            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Listado de tickets para la atracción"));
+            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Operacion exitosa"));
         }
 
         [HttpGet("{guid:guid}/horarios")]
         public async Task<IActionResult> GetHorariosProximosByAttraction(string guid)
         {
             var data = await _service.GetHorariosByAttraction(guid);
-            return Ok(ApiResponse<List<HorarioDto>>.Ok(data, "Listado de cupos con horarios por atracción"));
+            return Ok(ApiResponse<List<HorarioDto>>.Ok(data, "Operacion exitosa"));
         }
 
         [HttpGet("{guid:guid}/horarios/{horarioId:guid}/tickets")]
         public async Task<IActionResult> GetTicketsPorHorario(string guid, string horarioId)
         {
             var data = await _service.GetTicketsByHorario(guid, horarioId);
-            return Ok(ApiResponse<List<TicketDto>>.Ok(data, "Tickets disponibles para el horario"));
+            return Ok(ApiResponse<object>.Ok(new { items = data }, "Operacion exitosa"));
         }
 
         // Resenia contratos

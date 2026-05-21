@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.Api.Models.Common;
+using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.Exceptions;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -29,10 +29,10 @@ namespace Atraccion.Microservicios.Reserva.Api.Middleware
 
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var traceId = context.TraceIdentifier;
             var statusCode = (int)HttpStatusCode.InternalServerError;
             var message = "Error interno del servidor";
             var errors = new List<string> { };
+            var path = context.Request.Path.Value ?? "";
 
             if (exception is ValidationException valExcept)
             {
@@ -66,14 +66,15 @@ namespace Atraccion.Microservicios.Reserva.Api.Middleware
             }
             else
             {
-                errors.Add(exception.InnerException?.ToString() ?? exception.ToString());
+                // Do not return stack traces
+                errors.Add("Se ha producido un error inesperado en el servidor.");
             }
 
             var response = ApiErrorResponse.Fail(
                 statusCode,
                 message,
                 errors,
-                traceId
+                path
             );
 
             context.Response.ContentType = "application/json";
