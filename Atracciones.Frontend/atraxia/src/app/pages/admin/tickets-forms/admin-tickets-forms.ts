@@ -23,7 +23,7 @@ export class AdminTicketsFormsComponent implements OnInit {
   horarios: HorarioOption[] = [];
 
   payload: TicketPayload = {
-    horarioId: 0,
+    horarioId: '',
     nombre: '',
     precio: 0,
     tipo: 'JUNIOR'
@@ -47,7 +47,7 @@ export class AdminTicketsFormsComponent implements OnInit {
     try {
       this.horarios = await this.svc.getHorarios();
       if (this.horarios.length > 0) {
-        this.payload.horarioId = this.horarios[0].horarioId;
+        this.payload.horarioId = this.horarios[0].hor_guid;
       }
 
       this.route.paramMap.subscribe(params => {
@@ -71,7 +71,7 @@ export class AdminTicketsFormsComponent implements OnInit {
   async cargarTicket(id: number) {
     try {
       const ticket = await this.svc.getById(id);
-      this.payload.horarioId = ticket.horarioId;
+      this.payload.horarioId = ticket.hor_guid || '';
       this.payload.nombre = ticket.nombre;
       this.payload.precio = ticket.precio;
       this.payload.tipo = ticket.tipo;
@@ -89,7 +89,6 @@ export class AdminTicketsFormsComponent implements OnInit {
     this.validationErrors = [];
 
     // Ensure numeric values
-    this.payload.horarioId = Number(this.payload.horarioId);
     this.payload.precio = Number(this.payload.precio);
 
     if (!this.payload.horarioId || !this.payload.nombre || this.payload.precio < 0 || !this.payload.tipo) {
@@ -124,7 +123,7 @@ export class AdminTicketsFormsComponent implements OnInit {
   }
 
   getHorarioLabel(h: HorarioOption): string {
-    return `${h.fecha} ${h.horaInicio}-${h.horaFin || 'N/A'} (Atracción: ${h.atraccionId})`;
+    return `${h.fecha} ${h.hora_inicio}-${h.hora_fin || 'N/A'} (Atracción: ${h.atraccionId})`;
   }
 
   showToast(message: string, type: 'success' | 'error') {

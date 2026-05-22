@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
+using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Imagen;
@@ -269,6 +269,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
             return new AtraccionTypeModel
             {
                 Id = atraccion.AtId,
+                Guid = atraccion.AtGuid,
                 Nombre = atraccion.AtNombre
             };
         }

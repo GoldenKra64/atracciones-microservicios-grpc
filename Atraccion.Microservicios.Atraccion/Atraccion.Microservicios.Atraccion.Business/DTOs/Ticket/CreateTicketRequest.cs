@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket
 {
     public class CreateTicketRequest
     {
-        public int HorarioId { get; set; }
+        public string HorarioId { get; set; }
 
         public string Nombre { get; set; } = null!;
         public decimal Precio { get; set; }

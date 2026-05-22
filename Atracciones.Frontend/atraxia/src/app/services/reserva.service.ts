@@ -61,7 +61,7 @@ function adminApi() {
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
   async getAll(): Promise<Reserva[]> {
-    const res = await adminApi().get<ApiResponse<Reserva[]>>('/reservas');
+    const res = await adminApi().get<ApiResponse<Reserva[]>>('/reservas/all');
     return res.data.data;
   }
 
@@ -81,12 +81,12 @@ export class ReservaService {
   }
 
   async cancel(guid: string): Promise<ApiResponse<any>> {
-    const res = await adminApi().delete<ApiResponse<any>>(`/reservas/${guid}`);
+    const res = await adminApi().put<ApiResponse<any>>(`/reservas/${guid}/cancelar`);
     return res.data;
   }
 
-  async approve(guid: string): Promise<ApiResponse<any>> {
-    const res = await adminApi().post<ApiResponse<any>>(`/reservas/${guid}/confirmar-pago`);
+  async approve(guid: string, payload: any = {}): Promise<ApiResponse<any>> {
+    const res = await adminApi().post<ApiResponse<any>>(`/reservas/${guid}/pagos/confirmacion`, payload);
     return res.data;
   }
 }

@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
@@ -16,17 +16,23 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
     public class HorarioBusinessService : IHorarioBusinessService
     {
         private readonly IHorarioDataService _dataService;
+        private readonly IAtraccionDataService _atraccionDataService;
 
-        public HorarioBusinessService(IHorarioDataService dataService)
+        public HorarioBusinessService(IHorarioDataService dataService, IAtraccionDataService atraccionDataService)
         {
             _dataService = dataService;
+            _atraccionDataService = atraccionDataService;
         }
 
         public async Task<int> CreateAsync(CreateHorarioRequest request)
         {
             HorarioValidator.ValidateCreate(request);
 
+            var atraccion = await _atraccionDataService.GetByIdAsync(request.AtraccionId);
+            if (atraccion == null) throw new ValidationException("Atraccion no encontrada");
+
             var model = HorarioBusinessMapper.ToCreateModel(request);
+            model.AtraccionId = atraccion.Id;
             return await _dataService.CreateAsync(model);
         }
 
@@ -54,7 +60,11 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
 
             HorarioValidator.ValidateUpdate(request);
 
+            var atraccion = await _atraccionDataService.GetByIdAsync(request.AtraccionId);
+            if (atraccion == null) throw new ValidationException("Atraccion no encontrada");
+
             var model = HorarioBusinessMapper.ToUpdateModel(request);
+            model.AtraccionId = atraccion.Id;
             await _dataService.UpdateAsync(model);
         }
     }

@@ -20,6 +20,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                 HorarioId = entity.HorId,
                 HorarioGuid = entity.HorGuid,
                 AtraccionId = entity.AtId,
+                AtraccionGuid = entity.Atraccion?.AtGuid,
                 Fecha = entity.HorFecha.ToString("yyyy-MM-dd"),
                 HoraInicio = entity.HorHoraInicio.ToString(@"hh\:mm"),
                 HoraFin = entity.HorHoraFin?.ToString(@"hh\:mm"),

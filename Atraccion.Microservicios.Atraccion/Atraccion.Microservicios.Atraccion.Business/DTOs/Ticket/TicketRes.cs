@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +12,8 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket
         public decimal Precio { get; set; }
         public string Tipo { get; set; }
         public int HorarioId { get; set; }
+        
+        [System.Text.Json.Serialization.JsonPropertyName("hor_guid")]
+        public string? HorarioGuid { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Atraccion.Microservicios.Atraccion.Business.Mappers;
@@ -15,23 +15,35 @@ namespace Atraccion.Microservicios.Atraccion.Business.Services
     public class TicketBusinessService : ITicketBusinessService
     {
         private readonly ITicketDataService _dataService;
+        private readonly IHorarioDataService _horarioDataService;
 
-        public TicketBusinessService(ITicketDataService dataService)
+        public TicketBusinessService(ITicketDataService dataService, IHorarioDataService horarioDataService)
         {
             _dataService = dataService;
+            _horarioDataService = horarioDataService;
         }
 
         public async Task<int> CreateAsync(CreateTicketRequest request)
         {
             TicketValidator.ValidateCreate(request);
+
+            var horario = await _horarioDataService.GetByIdAsync(request.HorarioId);
+            if (horario == null) throw new ValidationException("Horario no encontrado");
+
             var model = TicketBusinessMapper.ToCreateModel(request);
+            model.HorarioId = horario.HorarioId;
             return await _dataService.CreateAsync(model);
         }
 
         public async Task UpdateAsync(UpdateTicketRequest request)
         {
             TicketValidator.ValidateUpdate(request);
+
+            var horario = await _horarioDataService.GetByIdAsync(request.HorarioId);
+            if (horario == null) throw new ValidationException("Horario no encontrado");
+
             var model = TicketBusinessMapper.ToUpdateModel(request);
+            model.HorarioId = horario.HorarioId;
             await _dataService.UpdateAsync(model);
         }
 

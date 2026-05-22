@@ -39,10 +39,10 @@ export class AtraccionesComponent implements OnInit {
         ...item,
         moneda: item.moneda || 'USD'
       }));
-      this.totalRecords = res.pagination?.total_records || 0;
+      this.totalRecords = res.pagination?.total || 0;
       this.totalPages = res.pagination?.total_pages || 0;
-      this.hasPrev = res.pagination ? res.pagination.prev_page !== null : false;
-      this.hasNext = res.pagination ? res.pagination.next_page !== null : false;
+      this.hasPrev = res.pagination ? res.pagination.page > 1 : false;
+      this.hasNext = res.pagination ? res.pagination.page < res.pagination.total_pages : false;
     } catch (e: any) {
       this.error = 'No se pudo cargar las atracciones. Verifica la conexión con el servidor.';
     } finally {

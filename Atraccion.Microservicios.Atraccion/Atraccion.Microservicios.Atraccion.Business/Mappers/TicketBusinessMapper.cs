@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
         {
             return new TicketCreateModel
             {
-                HorarioId = request.HorarioId,
                 Nombre = request.Nombre,
                 Precio = request.Precio,
                 Tipo = request.Tipo
@@ -28,8 +27,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 Id = request.Id,
                 Nombre = request.Nombre,
                 Precio = request.Precio,
-                Tipo = request.Tipo,
-                HorarioId = request.HorarioId
+                Tipo = request.Tipo
             };
         }
 
@@ -54,7 +52,8 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 Nombre = model.Nombre,
                 Precio = model.Precio,
                 Tipo = model.Tipo,
-                HorarioId = model.HorarioId
+                HorarioId = model.HorarioId,
+                HorarioGuid = model.HorarioGuid
             };
         }
     }

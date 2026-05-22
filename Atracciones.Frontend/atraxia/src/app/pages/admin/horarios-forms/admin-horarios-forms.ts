@@ -23,10 +23,10 @@ export class AdminHorariosFormsComponent implements OnInit {
   atracciones: AtraccionType[] = [];
 
   payload: HorarioPayload = {
-    atraccionId: 0,
+    atraccionId: '',
     fecha: '',
-    horaInicio: '',
-    horaFin: '',
+    hora_inicio: '',
+    hora_fin: '',
     cupos: 0
   };
 
@@ -46,7 +46,7 @@ export class AdminHorariosFormsComponent implements OnInit {
     try {
       this.atracciones = await this.svc.getAtraccionesType();
       if (this.atracciones.length > 0) {
-        this.payload.atraccionId = this.atracciones[0].id;
+        this.payload.atraccionId = this.atracciones[0].guid;
       }
 
       this.route.paramMap.subscribe(params => {
@@ -70,10 +70,10 @@ export class AdminHorariosFormsComponent implements OnInit {
   async cargarHorario(guid: string) {
     try {
       const horario = await this.svc.getById(guid);
-      this.payload.atraccionId = horario.atraccionId;
+      this.payload.atraccionId = horario.at_guid || '';
       this.payload.fecha = horario.fecha;
-      this.payload.horaInicio = horario.horaInicio;
-      this.payload.horaFin = horario.horaFin || '';
+      this.payload.hora_inicio = horario.hora_inicio;
+      this.payload.hora_fin = horario.hora_fin || '';
       this.payload.cupos = horario.cupos;
     } catch (e: any) {
       this.error = e.response?.data?.Message || 'Error al cargar el horario';
@@ -89,10 +89,9 @@ export class AdminHorariosFormsComponent implements OnInit {
     this.validationErrors = [];
 
     // Ensure numeric values
-    this.payload.atraccionId = Number(this.payload.atraccionId);
     this.payload.cupos = Number(this.payload.cupos);
 
-    if (!this.payload.atraccionId || !this.payload.fecha || !this.payload.horaInicio || this.payload.cupos < 0) {
+    if (!this.payload.atraccionId || !this.payload.fecha || !this.payload.hora_inicio || this.payload.cupos < 0) {
       this.error = 'Por favor complete todos los campos requeridos correctamente';
       return;
     }

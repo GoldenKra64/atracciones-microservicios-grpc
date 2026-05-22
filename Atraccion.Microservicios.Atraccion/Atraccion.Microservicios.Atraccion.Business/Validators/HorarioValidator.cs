@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Validators
         {
             var errors = new Dictionary<string, string[]>();
 
-            if (request.AtraccionId <= 0)
+            if (string.IsNullOrWhiteSpace(request.AtraccionId))
                 errors["Atraccion"] = new[] { "Atraccion invalida" };
 
             if (request.Cupos < 0)
@@ -74,7 +74,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Validators
 
             var errors = new Dictionary<string, string[]>();
 
-            if (request.AtraccionId <= 0)
+            if (string.IsNullOrWhiteSpace(request.AtraccionId))
                 errors["Atraccion"] = new[] { "Atraccion invalida" };
 
             if (request.Cupos < 0)

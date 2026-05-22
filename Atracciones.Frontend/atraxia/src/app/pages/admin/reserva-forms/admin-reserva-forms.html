@@ -21,7 +21,7 @@
           <label>Horario</label>
           <select formControlName="hor_guid">
             <option value="">Seleccione un horario</option>
-            <option *ngFor="let h of horarios" [value]="h.horarioGuid">{{ h.fecha }} {{ h.horaInicio }} - {{ h.horaFin || 'N/A' }} (ID: {{ h.horarioId }})</option>
+            <option *ngFor="let h of horarios" [value]="h.hor_guid">{{ h.fecha }} {{ h.hora_inicio }} - {{ h.hora_fin || 'N/A' }} (ID: {{ h.horarioId }})</option>
           </select>
         </div>
 

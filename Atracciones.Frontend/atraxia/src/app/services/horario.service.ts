@@ -4,24 +4,26 @@ import { environment } from '../../environments/environment';
 
 export interface Horario {
   horarioId: number;
-  horarioGuid: string;
+  hor_guid: string;
   atraccionId: number;
+  at_guid?: string;
   fecha: string;
-  horaInicio: string;
-  horaFin: string | null;
+  hora_inicio: string;
+  hora_fin: string | null;
   cupos: number;
 }
 
 export interface AtraccionType {
   id: number;
+  guid: string;
   name: string;
 }
 
 export interface HorarioPayload {
-  atraccionId: number;
+  atraccionId: string;
   fecha: string;
-  horaInicio: string;
-  horaFin: string | null;
+  hora_inicio: string;
+  hora_fin: string | null;
   cupos: number;
 }
 

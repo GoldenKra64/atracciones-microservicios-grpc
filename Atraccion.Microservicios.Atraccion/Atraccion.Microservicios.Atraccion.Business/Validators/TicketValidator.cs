@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,9 @@ namespace Atraccion.Microservicios.Atraccion.Business.Validators
         public static void ValidateCreate(CreateTicketRequest request)
         {
             var errors = new Dictionary<string, string[]>();
+
+            if (string.IsNullOrWhiteSpace(request.HorarioId))
+                errors["Horario"] = new[] { "Horario es obligatorio" };
 
             if (string.IsNullOrWhiteSpace(request.Nombre))
                 errors["Nombre"] = new[] { "Obligatorio" };
