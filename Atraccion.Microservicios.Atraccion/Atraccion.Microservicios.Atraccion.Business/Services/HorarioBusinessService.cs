@@ -1,6 +1,7 @@
-using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
+using Atraccion.Microservicios.Atraccion.Business.Exceptions;
 using Atraccion.Microservicios.Atraccion.Business.Interfaces;
 using Atraccion.Microservicios.Atraccion.Business.Mappers;
 using Atraccion.Microservicios.Atraccion.Business.Validators;

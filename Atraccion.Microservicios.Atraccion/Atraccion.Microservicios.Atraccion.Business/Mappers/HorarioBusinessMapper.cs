@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.DataAccess.Common;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;

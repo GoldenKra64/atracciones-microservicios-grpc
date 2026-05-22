@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
+﻿using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Atraccion;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Resena;
