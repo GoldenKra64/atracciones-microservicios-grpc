@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +18,9 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Horario
         
         [JsonPropertyName("atraccionId")]
         public int AtraccionId { get; set; }
+
+        [JsonPropertyName("atraccion_guid")]
+        public string AtraccionGuid { get; set; }
         
         [JsonPropertyName("fecha")]
         public string Fecha { get; set; }
