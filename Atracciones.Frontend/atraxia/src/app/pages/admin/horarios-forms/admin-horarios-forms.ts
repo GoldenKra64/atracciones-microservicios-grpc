@@ -25,8 +25,8 @@ export class AdminHorariosFormsComponent implements OnInit {
   payload: HorarioPayload = {
     atraccionId: '',
     fecha: '',
-    hora_inicio: '',
-    hora_fin: '',
+    horaInicio: '',
+    horaFin: '',
     cupos: 0
   };
 
@@ -72,8 +72,8 @@ export class AdminHorariosFormsComponent implements OnInit {
       const horario = await this.svc.getById(guid);
       this.payload.atraccionId = horario.at_guid || '';
       this.payload.fecha = horario.fecha;
-      this.payload.hora_inicio = horario.hora_inicio;
-      this.payload.hora_fin = horario.hora_fin || '';
+      this.payload.horaInicio = horario.hora_inicio;
+      this.payload.horaFin = horario.hora_fin || '';
       this.payload.cupos = horario.cupos;
     } catch (e: any) {
       this.error = e.response?.data?.Message || 'Error al cargar el horario';
@@ -91,7 +91,7 @@ export class AdminHorariosFormsComponent implements OnInit {
     // Ensure numeric values
     this.payload.cupos = Number(this.payload.cupos);
 
-    if (!this.payload.atraccionId || !this.payload.fecha || !this.payload.hora_inicio || this.payload.cupos < 0) {
+    if (!this.payload.atraccionId || !this.payload.fecha || !this.payload.horaInicio || this.payload.cupos < 0) {
       this.error = 'Por favor complete todos los campos requeridos correctamente';
       return;
     }
