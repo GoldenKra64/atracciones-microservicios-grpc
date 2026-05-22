@@ -68,10 +68,10 @@
           <div class="sidebar-card" *ngIf="atraccion.horarios_proximos.length > 0">
             <h3>🗓️ Horarios disponibles</h3>
             <div class="horario-item selectable" *ngFor="let h of atraccion.horarios_proximos"
-                 [class.selected]="horarioSeleccionado?.horarioId === h.horarioId"
+                 [class.selected]="horarioSeleccionado?.hor_guid === h.hor_guid"
                  (click)="seleccionarHorario(h)">
               <div class="horario-fecha">{{ h.fecha | date:'dd/MM/yyyy' }}</div>
-              <div class="horario-hora">{{ h.horaInicio }} – {{ h.horaFin }}</div>
+              <div class="horario-hora">{{ h.hora_inicio }} – {{ h.hora_fin }}</div>
               <div class="horario-cupos">{{ h.cupos }} cupos</div>
             </div>
           </div>
@@ -85,9 +85,9 @@
                 <span class="ticket-precio">{{ t.precio | currency:t.moneda:'symbol':'1.2-2' }}</span>
               </div>
               <div class="ticket-controls">
-                <button type="button" (click)="decrementar(t.tckGuid)">-</button>
-                <span>{{ cantidades[t.tckGuid] }}</span>
-                <button type="button" (click)="incrementar(t.tckGuid)">+</button>
+                <button type="button" (click)="decrementar(t.tck_guid)">-</button>
+                <span>{{ cantidades[t.tck_guid] }}</span>
+                <button type="button" (click)="incrementar(t.tck_guid)">+</button>
               </div>
             </div>
           </div>
@@ -106,13 +106,57 @@
 
   <!-- Modal -->
   <div class="modal-overlay" *ngIf="showModal">
-    <div class="modal-content" [class.success]="modalSuccess" [class.error]="!modalSuccess">
-      <div class="modal-icon">
-        <span *ngIf="modalSuccess">✔️</span>
-        <span *ngIf="!modalSuccess">❌</span>
+    <div class="modal-content" [class.success]="modalSuccess && !showPaymentForm" [class.error]="!modalSuccess && !showPaymentForm">
+      
+      <!-- Contenido de Pago -->
+      <div *ngIf="showPaymentForm" class="payment-form">
+        <h3>Confirmar Pago</h3>
+        <p>Tu reserva ha sido generada y está pendiente de pago. Por favor, confirma el pago para asegurar tus tickets.</p>
+        
+        <div class="form-group">
+          <label>Método de Pago</label>
+          <select [(ngModel)]="pagoMock.metodoPago">
+            <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+            <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Número de Tarjeta</label>
+          <input type="text" placeholder="XXXX-XXXX-XXXX-XXXX" [(ngModel)]="pagoMock.numeroTarjeta">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group half">
+            <label>Expiración</label>
+            <input type="text" placeholder="MM/YY" [(ngModel)]="pagoMock.fechaExpiracion">
+          </div>
+          <div class="form-group half">
+            <label>CVV</label>
+            <input type="text" placeholder="XXX" [(ngModel)]="pagoMock.cvv">
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-reservar" (click)="confirmarPago()" [disabled]="confirmingPayment">
+            <span *ngIf="!confirmingPayment">Confirmar Pago</span>
+            <div class="spinner-small" *ngIf="confirmingPayment"></div>
+          </button>
+          <button class="btn-cerrar" (click)="cerrarModal()">Cancelar</button>
+        </div>
       </div>
-      <p class="modal-message">{{ modalMsg }}</p>
-      <button class="btn-cerrar" (click)="cerrarModal()">Cerrar</button>
+
+      <!-- Contenido de Mensaje Estándar -->
+      <div *ngIf="!showPaymentForm">
+        <div class="modal-icon">
+          <span *ngIf="modalSuccess">✔️</span>
+          <span *ngIf="!modalSuccess">❌</span>
+        </div>
+        <p class="modal-message">{{ modalMsg }}</p>
+        <button class="btn-cerrar" (click)="cerrarModal()">Cerrar</button>
+      </div>
+
     </div>
   </div>
 </div>

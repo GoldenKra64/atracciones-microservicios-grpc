@@ -10,13 +10,13 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Horario
 {
     public class HorarioDto
     {
-        [JsonIgnore]
+        [JsonPropertyName("horarioId")]
         public int HorarioId { get; set; }
         
         [JsonPropertyName("hor_guid")]
         public string HorarioGuid { get; set; }
         
-        [JsonIgnore]
+        [JsonPropertyName("atraccionId")]
         public int AtraccionId { get; set; }
         
         [JsonPropertyName("fecha")]

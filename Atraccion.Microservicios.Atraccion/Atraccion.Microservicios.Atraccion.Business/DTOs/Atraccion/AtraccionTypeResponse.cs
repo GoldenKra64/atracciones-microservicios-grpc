@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +9,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Atraccion
     public class AtraccionTypeResponse
     {
         public int Id { get; set; }
+        public string Guid { get; set; }
         public string Name { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
+using Atraccion.Microservicios.Atraccion.DataAccess.Entities;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket;
 using System;
 using System.Collections.Generic;
@@ -21,6 +21,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Mappers
                 Precio = entity.TicPrecio,
                 Tipo = entity.TicTipoParticipante,
                 HorarioId = entity.HorId,
+                HorarioGuid = entity.Horario?.HorGuid,
 
                 Horario = entity.Horario != null ? HorarioMapper.ToModel(entity.Horario) : null
             };

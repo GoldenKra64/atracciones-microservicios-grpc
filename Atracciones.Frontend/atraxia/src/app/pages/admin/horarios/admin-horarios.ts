@@ -39,7 +39,7 @@ export class AdminHorariosComponent implements OnInit {
     try {
       this.horarios = await this.svc.getAll();
     } catch (e: any) {
-      this.error = e.response?.data?.Message || 'No se pudo cargar los horarios';
+      this.error = e.response?.data?.message || 'No se pudo cargar los horarios';
     } finally {
       this.loading = false;
       this.cdr.detectChanges();
@@ -71,7 +71,7 @@ export class AdminHorariosComponent implements OnInit {
       this.cerrarConfirmDelete();
       await this.cargar();
     } catch (e: any) {
-      const msg = e.response?.data?.Message || 'Error al eliminar el horario';
+      const msg = e.response?.data?.message || 'Error al eliminar el horario';
       this.showToast(msg, 'error');
       this.confirmDelete.loading = false;
       this.cdr.detectChanges();

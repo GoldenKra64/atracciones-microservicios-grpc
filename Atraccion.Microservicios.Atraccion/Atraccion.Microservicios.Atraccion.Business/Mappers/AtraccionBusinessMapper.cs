@@ -325,6 +325,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                     .Select(t => new TicketDto
                     {
                         HorId = t.HorarioId,
+                        HorarioGuid = t.HorarioGuid,
                         TckGuid = t.Guid,
                         Tipo = t.Tipo,
                         Precio = t.Precio,
@@ -342,6 +343,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             return new AtraccionTypeResponse
             {
                 Id = model.Id,
+                Guid = model.Guid,
                 Name = model.Nombre
             };
         }
@@ -352,6 +354,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 .Select(t => new TicketDto
                 {
                     HorId = t.HorarioId,
+                    HorarioGuid = t.HorarioGuid,
                     TckGuid = t.Guid,
                     Tipo = t.Tipo,
                     Precio = t.Precio,
@@ -367,6 +370,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             return horario.Tickets?.Select(t => new TicketDto
             {
                 HorId = t.HorarioId,
+                HorarioGuid = t.HorarioGuid,
                 TckGuid = t.Guid,
                 Tipo = t.Tipo,
                 Precio = t.Precio,

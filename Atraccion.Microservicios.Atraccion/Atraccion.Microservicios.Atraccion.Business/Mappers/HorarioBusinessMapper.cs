@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
+using Atraccion.Microservicios.Atraccion.Business.DTOs.Horario;
 using Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket;
 using Atraccion.Microservicios.Atraccion.DataAccess.Common;
 using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
@@ -17,7 +17,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
         {
             return new HorarioCreateModel
             {
-                AtraccionId = request.AtraccionId,
                 Fecha = request.Fecha,
                 HoraInicio = request.HoraInicio,
                 HoraFin = request.HoraFin,
@@ -30,7 +29,6 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
             return new HorarioUpdateModel
             {
                 Id = request.Id,
-                AtraccionId = request.AtraccionId,
                 Fecha = request.Fecha,
                 HoraInicio = request.HoraInicio,
                 HoraFin = request.HoraFin,
@@ -45,6 +43,7 @@ namespace Atraccion.Microservicios.Atraccion.Business.Mappers
                 HorarioId = model.HorarioId,
                 HorarioGuid = model.HorarioGuid,
                 AtraccionId = model.AtraccionId,
+                AtraccionGuid = model.AtraccionGuid,
                 Fecha = model.Fecha,
                 HoraInicio = model.HoraInicio,
                 HoraFin = model.HoraFin,

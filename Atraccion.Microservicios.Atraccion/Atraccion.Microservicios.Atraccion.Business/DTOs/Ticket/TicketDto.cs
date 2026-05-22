@@ -10,8 +10,11 @@ namespace Atraccion.Microservicios.Atraccion.Business.DTOs.Ticket
 {
     public class TicketDto
     {
-        [JsonIgnore]
+        [JsonPropertyName("horId")]
         public int? HorId { get; set; }
+        
+        [JsonPropertyName("hor_guid")]
+        public string? HorarioGuid { get; set; }
         
         [JsonPropertyName("tck_guid")]
         public string TckGuid { get; set; }

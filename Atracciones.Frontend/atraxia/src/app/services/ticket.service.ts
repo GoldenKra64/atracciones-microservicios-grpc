@@ -9,10 +9,11 @@ export interface Ticket {
   precio: number;
   tipo: string;
   horarioId: number;
+  hor_guid?: string;
 }
 
 export interface TicketPayload {
-  horarioId: number;
+  horarioId: string;
   nombre: string;
   precio: number;
   tipo: string;
@@ -20,10 +21,11 @@ export interface TicketPayload {
 
 export interface HorarioOption {
   horarioId: number;
-  atraccionId: number;
+  hor_guid: string;
+  atraccionId: string;
   fecha: string;
-  horaInicio: string;
-  horaFin: string | null;
+  hora_inicio: string;
+  hora_fin: string | null;
 }
 
 export interface ApiResponse<T> {

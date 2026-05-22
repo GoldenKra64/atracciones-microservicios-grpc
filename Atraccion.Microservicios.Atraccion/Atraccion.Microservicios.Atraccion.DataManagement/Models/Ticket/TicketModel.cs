@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
+using Atraccion.Microservicios.Atraccion.DataManagement.Models.Horario;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,7 @@ namespace Atraccion.Microservicios.Atraccion.DataManagement.Models.Ticket
         public decimal Precio { get; set; }
         public string Tipo { get; set; } = null!; // Ejemplo: Adulto, Niño, Senior, etc.
         public int HorarioId { get; set; }
+        public string? HorarioGuid { get; set; }
         public HorarioModel Horario { get; set; }
     }
 }

@@ -20,11 +20,21 @@ export class AtraccionDetalleComponent implements OnInit {
 
   at_guid: string = '';
   horarioSeleccionado: any = null;
-  cantidades: { [tckGuid: string]: number } = {};
+  cantidades: { [tck_guid: string]: number } = {};
   reserving = false;
   modalMsg = '';
   modalSuccess = false;
   showModal = false;
+
+  showPaymentForm = false;
+  reservaPendienteGuid = '';
+  pagoMock = {
+    metodoPago: 'Tarjeta de Crédito',
+    numeroTarjeta: '',
+    cvv: '',
+    fechaExpiracion: ''
+  };
+  confirmingPayment = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,6 +54,10 @@ export class AtraccionDetalleComponent implements OnInit {
     this.error = '';
     try {
       this.atraccion = await this.svc.getAtraccion(id);
+      const horarios = await this.svc.getHorariosByAtraccion(id);
+      if (this.atraccion) {
+        this.atraccion.horarios_proximos = horarios || [];
+      }
     } catch {
       this.error = 'No se pudo cargar los detalles de esta atracción.';
     } finally {
@@ -53,24 +67,33 @@ export class AtraccionDetalleComponent implements OnInit {
   }
 
 
-  seleccionarHorario(h: any) {
+  async seleccionarHorario(h: any) {
     this.horarioSeleccionado = h;
     this.cantidades = {};
-    this.getTicketsPorHorario().forEach(t => this.cantidades[t.tckGuid] = 0);
+    if (this.atraccion) {
+      try {
+        const tickets = await this.svc.getTicketsPorHorario(this.atraccion.id, h.hor_guid);
+        this.atraccion.tickets = tickets || [];
+        this.atraccion.tickets.forEach((t: any) => this.cantidades[t.tck_guid] = 0);
+      } catch (e) {
+        console.error('Error fetching tickets', e);
+      }
+    }
+    this.cdr.detectChanges();
   }
 
   getTicketsPorHorario() {
     if (!this.atraccion || !this.horarioSeleccionado) return [];
-    return this.atraccion.tickets.filter(t => t.horId === this.horarioSeleccionado.horarioId);
+    return this.atraccion.tickets || [];
   }
 
-  incrementar(tckGuid: string) {
-    this.cantidades[tckGuid] = (this.cantidades[tckGuid] || 0) + 1;
+  incrementar(tck_guid: string) {
+    this.cantidades[tck_guid] = (this.cantidades[tck_guid] || 0) + 1;
   }
 
-  decrementar(tckGuid: string) {
-    if (this.cantidades[tckGuid] > 0) {
-      this.cantidades[tckGuid]--;
+  decrementar(tck_guid: string) {
+    if (this.cantidades[tck_guid] > 0) {
+      this.cantidades[tck_guid]--;
     }
   }
 
@@ -93,7 +116,7 @@ export class AtraccionDetalleComponent implements OnInit {
 
     const payload = {
       at_guid: this.at_guid,
-      hor_guid: this.horarioSeleccionado.horarioGuid,
+      hor_guid: this.horarioSeleccionado.hor_guid,
       origen_canal: 'ATRAXIA',
       lineas
     };
@@ -102,10 +125,20 @@ export class AtraccionDetalleComponent implements OnInit {
       const res = await this.svc.reservar(payload);
       console.log(res);
       this.modalSuccess = res.success !== false;
-      this.modalMsg = res.Error || 'Reserva procesada exitosamente';
+      this.modalMsg = res.message || 'Reserva procesada exitosamente';
+
+      if (res.data?.rev_estado === 'PEN' || res.data?.rev_estado === 'Pendiente') {
+        this.reservaPendienteGuid = res.data.rev_guid;
+        this.showPaymentForm = true;
+        this.showModal = true;
+        this.reserving = false;
+        this.cdr.detectChanges();
+        return;
+      }
+
     } catch (e: any) {
       this.modalSuccess = false;
-      this.modalMsg = e.response?.Error || 'Error al procesar la reserva';
+      this.modalMsg = e.response?.data?.message || e.response?.Error || 'Error al procesar la reserva';
     } finally {
       this.reserving = false;
       this.showModal = true;
@@ -117,9 +150,32 @@ export class AtraccionDetalleComponent implements OnInit {
 
   cerrarModal() {
     this.showModal = false;
+    this.showPaymentForm = false;
     if (this.modalSuccess) {
       this.horarioSeleccionado = null;
       this.cantidades = {};
+    }
+  }
+
+  async confirmarPago() {
+    if (!this.reservaPendienteGuid) return;
+    this.confirmingPayment = true;
+    try {
+      const payload = {
+        metodoPago: this.pagoMock.metodoPago,
+        comprobante: 'TRX-' + Math.floor(Math.random() * 1000000)
+      };
+      const res = await this.svc.confirmarPago(this.reservaPendienteGuid, payload);
+      this.modalSuccess = res.success !== false;
+      this.modalMsg = 'Pago confirmado y factura generada con éxito.';
+      this.showPaymentForm = false;
+    } catch (e: any) {
+      this.modalSuccess = false;
+      this.modalMsg = e.response?.data?.message || 'Error al confirmar el pago';
+    } finally {
+      this.confirmingPayment = false;
+      this.cdr.detectChanges();
+      this.cargar(this.atraccion?.id || '');
     }
   }
 }

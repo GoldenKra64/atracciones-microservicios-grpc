@@ -58,11 +58,11 @@
           <td class="col-id"><span class="id-badge">{{ h.horarioId }}</span></td>
           <td class="col-nombre"><span class="nombre-text">{{ h.atraccionId }}</span></td>
           <td class="col-fecha">{{ h.fecha | date:'shortDate' }}</td>
-          <td class="col-hora">{{ h.horaInicio }} - {{ h.horaFin || 'N/A' }}</td>
+          <td class="col-hora">{{ h.hora_inicio }} - {{ h.hora_fin || 'N/A' }}</td>
           <td class="col-cupos"><span class="pais-badge">{{ h.cupos }}</span></td>
           <td class="col-acciones">
             <div class="acciones-wrap">
-              <button class="btn-editar" (click)="irAEditar(h.horarioGuid)" title="Actualizar horario">✏️ Editar</button>
+              <button class="btn-editar" (click)="irAEditar(h.hor_guid)" title="Actualizar horario">✏️ Editar</button>
               <button class="btn-eliminar" (click)="abrirConfirmDelete(h)" title="Eliminar horario">🗑️ Eliminar</button>
             </div>
           </td>

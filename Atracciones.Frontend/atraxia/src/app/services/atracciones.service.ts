@@ -25,8 +25,8 @@ export interface AtraccionDetalle {
   id: string; nombre: string; descripcion: string; imagenes: string[];
   incluye: string[]; no_incluye: string[]; punto_encuentro: string | null;
   incluye_transporte: boolean; incluye_acompaniante: boolean;
-  tickets: { horId: number; tckGuid: string; tipo: string; precio: number; moneda: string }[];
-  horarios_proximos: { horarioId: number; horarioGuid: string | null; atraccionId: number; fecha: string; horaInicio: string; horaFin: string; cupos: number }[];
+  tickets: { horId: number; tck_guid: string; tipo: string; precio: number; moneda: string }[];
+  horarios_proximos: { horarioId: number; hor_guid: string | null; atraccionId: number; fecha: string; hora_inicio: string; hora_fin: string; cupos: number }[];
 }
 
 export interface AtraccionPayload {
@@ -84,9 +84,24 @@ export class AtraccionesService {
     return res.data;
   }
 
+  async confirmarPago(guid: string, payload: any = {}) {
+    const res = await api.post(`/reservas/${guid}/pagos/confirmacion`, payload);
+    return res.data;
+  }
+
   async getResenas(id: string): Promise<ResenaItem[]> {
-    const res = await api.get(`/resena/atraccion/${id}`);
+    const res = await api.get(`/atracciones/${id}/resenias`);
     return res.data.data;
+  }
+
+  async getHorariosByAtraccion(guid: string): Promise<any[]> {
+    const res = await api.get(`/atracciones/${guid}/horarios`);
+    return res.data.data;
+  }
+
+  async getTicketsPorHorario(guid: string, horarioGuid: string): Promise<any[]> {
+    const res = await api.get(`/atracciones/${guid}/horarios/${horarioGuid}/tickets`);
+    return res.data.data.items;
   }
 
   // Admin Methods
