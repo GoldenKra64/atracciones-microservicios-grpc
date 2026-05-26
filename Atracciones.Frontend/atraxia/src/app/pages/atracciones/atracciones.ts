@@ -21,9 +21,9 @@ export class AtraccionesComponent implements OnInit {
   hasPrev = false;
   hasNext = false;
 
-  filtros = { Ciudad: '', Pais: '', Disponible: '', PageNumber: 1, PageSize: 9 };
+  filtros = { Ciudad: '', Pais: '', Disponible: '', page: 1, limit: 9 };
 
-  constructor(private svc: AtraccionesService, private cdr: ChangeDetectorRef) {}
+  constructor(private svc: AtraccionesService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() { this.cargar(); }
 
@@ -37,7 +37,12 @@ export class AtraccionesComponent implements OnInit {
       const res = await this.svc.getAtracciones(params);
       this.items = (res.data || []).map((item: any) => ({
         ...item,
-        moneda: item.moneda || 'USD'
+        moneda: item.moneda || 'USD',
+        total_resenias: item.total_resenas || 0,
+        disponible: item.disponibilidad?.disponible || false,
+        disponible_hoy: item.disponibilidad?.disponible_hoy || false,
+        proxima_fecha_disponible: item.disponibilidad?.proxima_fecha_disponible || '',
+        cupos_disponibles: item.disponibilidad?.cupos_disponibles || 0
       }));
       this.totalRecords = res.pagination?.total || 0;
       this.totalPages = res.pagination?.total_pages || 0;
@@ -51,10 +56,10 @@ export class AtraccionesComponent implements OnInit {
     }
   }
 
-  buscar() { this.filtros.PageNumber = 1; this.cargar(); }
-  limpiar() { this.filtros = { Ciudad: '', Pais: '', Disponible: '', PageNumber: 1, PageSize: 9 }; this.cargar(); }
-  prevPage() { if (this.hasPrev) { this.filtros.PageNumber--; this.cargar(); } }
-  nextPage() { if (this.hasNext) { this.filtros.PageNumber++; this.cargar(); } }
+  buscar() { this.filtros.page = 1; this.cargar(); }
+  limpiar() { this.filtros = { Ciudad: '', Pais: '', Disponible: '', page: 1, limit: 9 }; this.cargar(); }
+  prevPage() { if (this.hasPrev) { this.filtros.page--; this.cargar(); } }
+  nextPage() { if (this.hasNext) { this.filtros.page++; this.cargar(); } }
 
-  estrellas(n: number): string[] { return Array(5).fill('').map((_,i) => i < n ? '★' : '☆'); }
+  estrellas(n: number): string[] { return Array(5).fill('').map((_, i) => i < n ? '★' : '☆'); }
 }

@@ -44,23 +44,17 @@ export interface ClienteProfile {
 
 export interface FacturaItem {
   id: number;
-  guid: string;
-  numero: string;
-  fechaEmision: string;
+  fac_guid: string;
+  fac_numero: string;
+  rev_codigo: number;
+  fecha_emision: string;
   total: number;
   origenCanal: string;
-  observacion: string;
+  observacion: string | null;
   estado: string;
-}
-
-export interface FacturasResponse {
-  items: FacturaItem[];
-  totalRecords: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
+  nombre_receptor: string;
+  correo_receptor: string;
+  guid: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -70,7 +64,7 @@ export class ClienteService {
     return res.data.data;
   }
 
-  async getFacturas(page = 1, size = 20): Promise<FacturasResponse> {
+  async getFacturas(page = 1, size = 20): Promise<FacturaItem[]> {
     const res = await api.get('/facturas', { params: { page, size } });
     return res.data.data;
   }

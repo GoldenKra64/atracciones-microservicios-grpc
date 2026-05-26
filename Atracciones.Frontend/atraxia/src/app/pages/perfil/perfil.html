@@ -50,7 +50,7 @@
       <!-- Facturas -->
       <section class="facturas-card">
         <h3>Historial de Facturas</h3>
-        
+
         <div class="empty-state" *ngIf="facturas.length === 0">
           <p>Aún no tienes facturas registradas.</p>
         </div>
@@ -68,8 +68,8 @@
             </thead>
             <tbody>
               <tr *ngFor="let f of facturas">
-                <td>#{{ f.numero }}</td>
-                <td>{{ f.fechaEmision | date:'dd/MM/yyyy' }}</td>
+                <td>#{{ f.fac_numero }}</td>
+                <td>{{ f.fecha_emision | date:'dd/MM/yyyy' }}</td>
                 <td><span class="tag-canal">{{ f.origenCanal }}</span></td>
                 <td>
                   <span class="tag-estado" [class.act]="f.estado === 'ACT'" [class.anu]="f.estado === 'ANU'">

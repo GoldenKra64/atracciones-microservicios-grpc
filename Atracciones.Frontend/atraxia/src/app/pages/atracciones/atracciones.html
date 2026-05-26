@@ -81,7 +81,7 @@
       <!-- Paginación -->
       <div class="pagination" *ngIf="totalPages > 1 && !loading">
         <button [disabled]="!hasPrev" (click)="prevPage()">← Anterior</button>
-        <span>{{ filtros.PageNumber }} / {{ totalPages }}</span>
+        <span>{{ filtros.page }} / {{ totalPages }}</span>
         <button [disabled]="!hasNext" (click)="nextPage()">Siguiente →</button>
       </div>
     </section>

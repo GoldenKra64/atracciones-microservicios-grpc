@@ -16,8 +16,8 @@ export class PerfilComponent implements OnInit {
   facturas: FacturaItem[] = [];
   loading = false;
   error = '';
-  
-  constructor(private svc: ClienteService, private router: Router, private cdr: ChangeDetectorRef) {}
+
+  constructor(private svc: ClienteService, private router: Router, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.cargarDatos();
@@ -35,8 +35,7 @@ export class PerfilComponent implements OnInit {
 
     try {
       this.profile = await this.svc.getProfile();
-      const facturasData = await this.svc.getFacturas(1, 20);
-      this.facturas = facturasData.items || [];
+      this.facturas = await this.svc.getFacturas(1, 20) || [];
     } catch (err: any) {
       this.error = 'No se pudieron cargar los datos del perfil.';
     } finally {
