@@ -48,7 +48,7 @@
         <tr *ngFor="let f of facturas" class="table-row">
           <td class="col-id"><span class="id-badge">{{ f.id }}</span></td>
           <td class="col-numero"><span class="nombre-text">{{ f.numero }}</span></td>
-          <td class="col-fecha">{{ f.fechaEmision | date:'shortDate' }}</td>
+          <td class="col-fecha">{{ f.fecha_emision | date:'shortDate' }}</td>
           <td class="col-total">{{ f.total | currency }}</td>
           <td class="col-canal">{{ f.origenCanal }}</td>
           <td class="col-estado">

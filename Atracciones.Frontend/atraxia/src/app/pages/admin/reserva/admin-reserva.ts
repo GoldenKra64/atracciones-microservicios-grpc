@@ -33,7 +33,7 @@ export class AdminReservaComponent implements OnInit {
     this.error = '';
     try {
       const allReservas = await this.svc.getAll();
-      this.reservas = allReservas.filter(r => r.rev_estado === 'PEN');
+      this.reservas = allReservas;//.filter(r => r.rev_estado === 'PENDIENTE');
     } catch (e: any) {
       this.error = e.response?.data?.message || 'No se pudo cargar las reservas';
     } finally {

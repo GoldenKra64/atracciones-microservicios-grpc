@@ -59,7 +59,7 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Queries
         public async Task<List<Reserva.DataAccess.Entities.Reserva?>> GetAllAsync()
         {
             return await _context.Reservas
-                .Include(r => r.Detalles).Where(x => x.RevEstado == "PEN").ToListAsync();
+                .Include(r => r.Detalles).ToListAsync();
         }
 
         public async Task<PagedResult<Entities.Reserva>> GetAllBookingAsync(int page, int size)
