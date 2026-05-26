@@ -6,7 +6,7 @@ export interface FacturaAdmin {
   id: number;
   guid: string;
   numero: string;
-  fechaEmision: string;
+  fecha_emision: string;
   total: number;
   origenCanal: string;
   observacion: string;
