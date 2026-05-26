@@ -70,6 +70,10 @@ export class AtraccionesService {
   async getAtracciones(filtros: Record<string, any> = {}) {
     const params: any = {};
     Object.entries(filtros).forEach(([k, v]) => { if (v !== '' && v !== undefined) params[k] = v; });
+    if (params.page !== undefined) {
+      params.PageNumber = params.page;
+      delete params.page;
+    }
     const res = await api.get('/atracciones', { params });
     return res.data;
   }
