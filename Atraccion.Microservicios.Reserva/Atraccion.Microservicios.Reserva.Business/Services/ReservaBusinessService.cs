@@ -144,14 +144,33 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
 
         public async Task<Atraccion.Microservicios.Reserva.Business.DTOs.Factura.FacturaResponse> ApproveAsync(string id, ConfirmarPagoRequest request)
         {
-            var invoice = await _dataService.ApproveAsync(id, request?.nombre_receptor, request?.correo_receptor);
             var reserva = await _dataService.GetByIdAsync(id);
+
+            if (reserva == null)
+                throw new NotFoundException("Reserva", id);
+
+            // Calcular cupos necesarios desde los detalles
+            int cuposNecesarios = reserva.detalle?.Sum(d => d.cantidad) ?? 0;
+
+            // Validar disponibilidad de cupos en el horario antes de aprobar
+            if (!string.IsNullOrEmpty(reserva.hor_guid) && cuposNecesarios > 0)
+            {
+                var horario = await _atraccionIntegration.GetHorarioByGuidAsync(reserva.hor_guid);
+                if (horario != null && cuposNecesarios > horario.CuposDisponibles)
+                    throw new ValidationException(
+                        $"No se puede aprobar la reserva: no hay suficientes cupos disponibles en el horario. " +
+                        $"Se requieren {cuposNecesarios} cupo(s) y solo hay {horario.CuposDisponibles} disponible(s)."
+                    );
+            }
+
+            var invoice = await _dataService.ApproveAsync(id, request?.nombre_receptor, request?.correo_receptor);
+            var reservaAprobada = await _dataService.GetByIdAsync(id);
 
             return new Atraccion.Microservicios.Reserva.Business.DTOs.Factura.FacturaResponse
             {
                 FacGuid = invoice.FacGuid,
                 FacNumero = invoice.FacNumero,
-                RevCodigo = reserva?.rev_codigo ?? string.Empty,
+                RevCodigo = reservaAprobada?.rev_codigo ?? string.Empty,
                 Total = invoice.Total,
                 Moneda = "USD",
                 FechaEmision = invoice.FechaEmision,

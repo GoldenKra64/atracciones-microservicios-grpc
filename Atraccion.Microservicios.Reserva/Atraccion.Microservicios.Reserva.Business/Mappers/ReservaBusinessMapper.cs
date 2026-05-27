@@ -67,6 +67,7 @@ namespace Atraccion.Microservicios.Reserva.Business.Mappers
                 hor_fecha = model.hor_fecha,
                 hor_hora_inicio = model.hor_hora_inicio,
                 hor_hora_fin = model.hor_hora_fin,
+                hor_guid = model.hor_guid,
 
                 atraccion_nombre = model.atraccion_nombre,
 

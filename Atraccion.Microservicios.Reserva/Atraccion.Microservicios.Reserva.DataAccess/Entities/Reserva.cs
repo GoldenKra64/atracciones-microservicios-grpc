@@ -23,6 +23,7 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Entities
         public string RevCanal { get; set; } = null!;
 
         public int? HorId { get; set; }
+        public string? HorGuid { get; set; }
         public string? HorFecha { get; set; }
         public string? HorHoraInicio { get; set; }
         public string? HorHoraFin { get; set; }

@@ -84,21 +84,28 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Migrations
                         .HasColumnName("cli_id");
 
                     b.Property<string>("HorFecha")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("hor_fecha");
+
+                    b.Property<string>("HorGuid")
+                        .HasColumnType("text")
+                        .HasColumnName("horario_guid");
 
                     b.Property<string>("HorHoraFin")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("hor_hora_fin");
 
                     b.Property<string>("HorHoraInicio")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("hor_hora_inicio");
 
                     b.Property<int?>("HorId")
                         .HasColumnType("integer")
                         .HasColumnName("hor_id");
 
                     b.Property<string>("RevCanal")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("rev_canal");
 
                     b.Property<string>("RevCodigo")
                         .IsRequired()

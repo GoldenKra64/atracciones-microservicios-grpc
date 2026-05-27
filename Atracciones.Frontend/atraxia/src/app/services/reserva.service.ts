@@ -34,6 +34,7 @@ export interface ReservaLineaPayload {
 }
 
 export interface ReservaPayload {
+  at_guid?: string;
   clienteId: number;
   hor_guid: string;
   origen_canal: string;

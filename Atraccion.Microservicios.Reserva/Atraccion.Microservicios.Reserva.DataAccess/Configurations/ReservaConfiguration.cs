@@ -73,11 +73,19 @@ namespace Atraccion.Microservicios.Reserva.DataAccess.Configurations
                    .HasColumnName("rev_motivo_cancelacion")
                    .HasMaxLength(300);
 
+            builder.Property(e => e.HorGuid)
+                   .HasColumnName("horario_guid");
+
             builder.Property(e => e.RevEstado)
                    .HasColumnName("rev_estado")
                    .HasMaxLength(3);
 
             builder.Property(e => e.HorId).HasColumnName("hor_id").IsRequired(false);
+            builder.Property(e => e.HorFecha).HasColumnName("hor_fecha");
+            builder.Property(e => e.HorHoraFin).HasColumnName("hor_hora_fin").IsRequired(false);
+            builder.Property(e => e.HorHoraInicio).HasColumnName("hor_hora_inicio");
+            builder.Property(e => e.RevCanal).HasColumnName("rev_canal").IsRequired(false);
+
             builder.Property(e => e.AtNombre).HasColumnName("at_nombre").HasMaxLength(200).IsRequired(false);
 
             builder.HasMany(x => x.Detalles)
