@@ -44,7 +44,7 @@ namespace Atraccion.Microservicios.Reserva.Business.Mappers
             var estadoMapeado = model.rev_estado switch
             {
                 "PEN" => "PENDIENTE",
-                "APR" => "APROBADO",
+                "APR" => "PAGADA",
                 "CAN" => "CANCELADO",
                 _ => model.rev_estado
             };
