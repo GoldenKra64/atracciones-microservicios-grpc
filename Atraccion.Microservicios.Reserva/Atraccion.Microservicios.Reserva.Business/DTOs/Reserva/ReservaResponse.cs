@@ -13,6 +13,7 @@ namespace Atraccion.Microservicios.Reserva.Business.DTOs.Reserva
         public string hor_fecha { get; set; } = string.Empty;
         public string hor_hora_inicio { get; set; } = string.Empty;
         public string? hor_hora_fin { get; set; } = string.Empty;
+        public string? hor_guid { get; set; }
         public string atraccion_nombre { get; set; } = string.Empty;
         public double rev_subtotal { get; set; }
         public double rev_valor_iva { get; set; }
