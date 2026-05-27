@@ -174,7 +174,7 @@ namespace Atraccion.Microservicios.Reserva.Business.Services
                 Total = invoice.Total,
                 Moneda = "USD",
                 FechaEmision = invoice.FechaEmision,
-                Estado = "A",
+                Estado = "PAGADA",
                 NombreReceptor = invoice.NombreReceptor,
                 CorreoReceptor = invoice.CorreoReceptor
             };
