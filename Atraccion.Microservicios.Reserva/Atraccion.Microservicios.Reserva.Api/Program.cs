@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Reserva.Api.Extensions;
+using Atraccion.Microservicios.Reserva.Api.Extensions;
 using Atraccion.Microservicios.Reserva.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +11,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCorsExtension();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerExtension();
+builder.Services.AddRabbitMqMessaging(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

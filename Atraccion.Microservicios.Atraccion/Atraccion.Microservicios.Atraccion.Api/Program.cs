@@ -13,6 +13,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCorsExtension();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerExtension();
+builder.Services.AddRabbitMqMessaging(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
