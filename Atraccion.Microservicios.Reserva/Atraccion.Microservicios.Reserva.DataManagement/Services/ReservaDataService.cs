@@ -1,4 +1,4 @@
-using Atraccion.Microservicios.Reserva.DataAccess.Common;
+﻿using Atraccion.Microservicios.Reserva.DataAccess.Common;
 using Atraccion.Microservicios.Reserva.DataAccess.Entities;
 using Atraccion.Microservicios.Reserva.DataAccess.Queries.Interfaces;
 using Atraccion.Microservicios.Reserva.DataManagement.Integrations;
@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MassTransit;
+using Atracciones.Microservicios.Messages;
 
 namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 {
@@ -21,17 +23,23 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
         private readonly IAtraccionIntegration _atraccionIntegration;
         private readonly IFacturaIntegration _facturaIntegration;
+        private readonly IPublishEndpoint _publishEndpoint;
+        private readonly IRequestClient<GenerateInvoiceCommand> _invoiceClient;
 
         public ReservaDataService(
             IReservaQuery query,
             IUnitOfWork uow,
             IAtraccionIntegration atraccionIntegration,
-            IFacturaIntegration facturaIntegration)
+            IFacturaIntegration facturaIntegration,
+            IPublishEndpoint publishEndpoint,
+            IRequestClient<GenerateInvoiceCommand> invoiceClient)
         {
             _query = query;
             _uow = uow;
             _atraccionIntegration = atraccionIntegration;
             _facturaIntegration = facturaIntegration;
+            _publishEndpoint = publishEndpoint;
+            _invoiceClient = invoiceClient;
         }
 
         public async Task<DataPagedResult<ReservaModel>> GetByClienteAsync(int clienteId, int page, int size)
@@ -106,7 +114,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                     foreach (var det in entity.Detalles)
                     {
-                        await _atraccionIntegration.ConsumeCapacityAsync(horario.HorId, det.TicCantidad);
+                        await _publishEndpoint.Publish<ReduceCuposCommand>(new { HorarioId = horario.HorId, Cantidad = det.TicCantidad });
                     }
                 }
 
@@ -114,14 +122,14 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                 if (!isPublic)
                 {
-                    await _facturaIntegration.GenerateInvoiceAsync(new GenerateInvoiceDto
+                    await _publishEndpoint.Publish<GenerateInvoiceCommand>(new
                     {
                         RevId = id,
                         CliId = entity.CliId ?? 0,
                         Canal = entity.RevCanal,
                         Total = entity.RevTotal,
-                        NombreReceptor = null,
-                        CorreoReceptor = null
+                        NombreReceptor = (string?)null,
+                        CorreoReceptor = (string?)null
                     });
                 }
 
@@ -175,7 +183,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 {
                     try
                     {
-                        await _atraccionIntegration.ConsumeCapacityAsync(horId, totalPersonas);
+                        await _publishEndpoint.Publish<ReduceCuposCommand>(new { HorarioId = horId, Cantidad = totalPersonas });
                     }
                     catch
                     {
@@ -201,7 +209,7 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
 
                 await _uow.ReservaRepository.ApproveAsync(id, atNombre);
 
-                var response = await _facturaIntegration.GenerateInvoiceAsync(new GenerateInvoiceDto
+                var response = await _invoiceClient.GetResponse<GenerateInvoiceResult>(new
                 {
                     RevId = entity.RevId,
                     CliId = entity.CliId ?? 0,
@@ -212,7 +220,18 @@ namespace Atraccion.Microservicios.Reserva.DataManagement.Services
                 });
 
                 await _uow.CommitAsync();
-                return response;
+                
+                return new Atraccion.Microservicios.Reserva.DataManagement.Protos.GenerateInvoiceResponse
+                {
+                    Success = true,
+                    FacGuid = response.Message.FacGuid,
+                    FacNumero = response.Message.FacNumero,
+                    Total = response.Message.Total,
+                    FechaEmision = response.Message.FechaEmision.ToString("o"),
+                    Estado = "ACTIVO",
+                    NombreReceptor = response.Message.NombreReceptor ?? "",
+                    CorreoReceptor = response.Message.CorreoReceptor ?? ""
+                };
             }
             catch
             {
