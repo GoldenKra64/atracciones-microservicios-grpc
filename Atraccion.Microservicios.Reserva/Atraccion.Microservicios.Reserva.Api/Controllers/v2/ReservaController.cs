@@ -1,4 +1,4 @@
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Atraccion.Microservicios.Reserva.Api.Models.Common;
 using Atraccion.Microservicios.Reserva.Business.DTOs;
 using Atraccion.Microservicios.Reserva.Business.DTOs.Reserva;
@@ -117,7 +117,7 @@ namespace Atraccion.Microservicios.Reserva.Api.Controllers.v2
                     return BadRequest(new { error = "El cliente_invitado es obligatorio si no se provee token." });
                 }
                 var response = await _service.CreatePublicAsync(request);
-                return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva y Factura creadas exitosamente", 201));
+                return Ok(ApiResponse<ReservaResponse>.Ok(response, "Reserva creada", 201));
             }
         }
 
