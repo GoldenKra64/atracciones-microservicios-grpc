@@ -1,4 +1,4 @@
-﻿using Atraccion.Microservicios.Atraccion.Api.Extensions;
+using Atraccion.Microservicios.Atraccion.Api.Extensions;
 using Atraccion.Microservicios.Atraccion.Api.Middleware;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -18,6 +18,9 @@ builder.Services.AddRabbitMqMessaging(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddGrpc(); // Agregado para gRPC Server
+
+builder.Services.AddGraphQLServer()
+    .AddQueryType<Atraccion.Microservicios.Atraccion.Api.GraphQL.AtraccionQuery>();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -58,5 +61,6 @@ app.UseAuthorization();
 // ===============================
 app.MapControllers();
 app.MapGrpcService<Atraccion.Microservicios.Atraccion.Api.Grpc.AtraccionGrpcService>();
+app.MapGraphQL("/graphql");
 
 app.Run();

@@ -40,9 +40,8 @@ class _AtraccionDetalleScreenState extends State<AtraccionDetalleScreen> {
       _error = '';
     });
     try {
-      final atraccion = await _svc.getAtraccion(widget.id);
-      final horarios = await _svc.getHorariosByAtraccion(widget.id);
-      atraccion.horariosProximos = horarios;
+      // Usar GraphQL
+      final atraccion = await _svc.getAtraccionCompleta(widget.id);
       
       setState(() {
         _atraccion = atraccion;
@@ -66,7 +65,8 @@ class _AtraccionDetalleScreenState extends State<AtraccionDetalleScreen> {
 
     if (_atraccion != null && h.horGuid != null) {
       try {
-        final tickets = await _svc.getTicketsPorHorario(_atraccion!.id, h.horGuid!);
+        // Usar GraphQL
+        final tickets = await _svc.getTicketsGraphQL(_atraccion!.id, h.horGuid!);
         setState(() {
           _atraccion!.tickets = tickets;
           for (var t in tickets) {
