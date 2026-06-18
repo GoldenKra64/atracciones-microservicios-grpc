@@ -39,12 +39,11 @@ class _PerfilScreenState extends State<PerfilScreen> {
     });
 
     try {
-      final profile = await _svc.getProfile();
-      final facturas = await _svc.getFacturas(1, 20);
+      final result = await _svc.getPerfilCompleto(1, 20);
       
       setState(() {
-        _profile = profile;
-        _facturas = facturas;
+        _profile = result['profile'];
+        _facturas = result['facturas'];
       });
     } catch (err) {
       setState(() {

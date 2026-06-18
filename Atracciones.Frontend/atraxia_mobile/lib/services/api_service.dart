@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:graphql_flutter/graphql_flutter.dart';
 class ApiService {
   // Configura aquí la URL de tu backend. Para emulador Android suele ser 10.0.2.2.
-  static const String baseUrl = 'http://10.0.2.2:5134/api'; 
+  static const String baseUrl = 'https://atracciones-microservicios-grpc-production.up.railway.app/api/v2'; 
 
   Future<Map<String, String>> _getHeaders() async {
     final prefs = await SharedPreferences.getInstance();
@@ -52,5 +52,30 @@ class ApiService {
       Uri.parse('$baseUrl$endpoint'),
       headers: headers,
     );
+  }
+
+  Future<QueryResult> queryGraphQL(String endpoint, String query, {Map<String, dynamic>? variables}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('atraxia_token');
+    
+    final String rootUrl = baseUrl.replaceAll('/api/v2', '');
+    final HttpLink httpLink = HttpLink('$rootUrl$endpoint');
+    final AuthLink authLink = AuthLink(
+      getToken: () async => token != null ? 'Bearer $token' : null,
+    );
+    final Link link = authLink.concat(httpLink);
+
+    final GraphQLClient client = GraphQLClient(
+      cache: GraphQLCache(),
+      link: link,
+    );
+
+    final QueryOptions options = QueryOptions(
+      document: gql(query),
+      variables: variables ?? {},
+      fetchPolicy: FetchPolicy.networkOnly,
+    );
+
+    return await client.query(options);
   }
 }

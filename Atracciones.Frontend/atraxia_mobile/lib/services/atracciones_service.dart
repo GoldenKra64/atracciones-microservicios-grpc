@@ -74,4 +74,57 @@ class AtraccionesService {
     }
     return [];
   }
+
+  Future<AtraccionDetalle> getAtraccionCompleta(String guid) async {
+    const String query = '''
+      query GetAtraccionCompleta(\$guid: String!) {
+        atraccion(guid: \$guid) {
+          id
+          nombre
+          descripcion
+          imagenes
+        }
+        horarios(guid: \$guid) {
+          horGuid
+          fecha
+          horaInicio
+          horaFin
+          cupos
+        }
+      }
+    ''';
+
+    final res = await _api.queryGraphQL('/graphql/atraccion', query, variables: {'guid': guid});
+    if (res.hasException) throw Exception(res.exception.toString());
+    
+    final data = res.data;
+    if (data == null) throw Exception('No data');
+
+    final atr = AtraccionDetalle.fromJson(data['atraccion']);
+    final hList = data['horarios'] as List?;
+    atr.horariosProximos = hList?.map((e) => HorarioProximo.fromJson(e)).toList() ?? [];
+    return atr;
+  }
+
+  Future<List<TicketInfo>> getTicketsGraphQL(String guid, String horarioId) async {
+    const String query = '''
+      query GetTickets(\$guid: String!, \$horarioId: String!) {
+        tickets(guid: \$guid, horarioId: \$horarioId) {
+          tckGuid
+          tipo
+          precio
+          moneda
+        }
+      }
+    ''';
+
+    final res = await _api.queryGraphQL('/graphql/atraccion', query, variables: {
+      'guid': guid,
+      'horarioId': horarioId
+    });
+    if (res.hasException) throw Exception(res.exception.toString());
+    
+    final list = res.data?['tickets'] as List?;
+    return list?.map((e) => TicketInfo.fromJson(e)).toList() ?? [];
+  }
 }

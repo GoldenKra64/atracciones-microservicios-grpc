@@ -24,4 +24,36 @@ class ClienteService {
     }
     return [];
   }
+
+  Future<Map<String, dynamic>> getPerfilCompleto(int page, int limit) async {
+    const String query = '''
+      query GetPerfilCompleto(\$page: Int!, \$limit: Int!) {
+        profile {
+          id
+          nombres
+          apellidos
+          correo
+          telefono
+          direccion
+        }
+        facturas(page: \$page, limit: \$limit) {
+          id
+          fecha
+          total
+          estado
+        }
+      }
+    ''';
+
+    final res = await _api.queryGraphQL('/graphql/cliente', query, variables: {'page': page, 'limit': limit});
+    if (res.hasException) throw Exception(res.exception.toString());
+    
+    final data = res.data;
+    if (data == null) throw Exception('No data');
+
+    return {
+      'profile': ClienteProfile.fromJson(data['profile']),
+      'facturas': (data['facturas'] as List?)?.map((e) => FacturaItem.fromJson(e)).toList() ?? []
+    };
+  }
 }
