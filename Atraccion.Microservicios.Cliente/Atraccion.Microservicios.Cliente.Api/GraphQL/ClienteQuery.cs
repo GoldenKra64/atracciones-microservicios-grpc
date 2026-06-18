@@ -5,6 +5,7 @@ using Atraccion.Microservicios.Cliente.Business.Exceptions;
 using Atraccion.Microservicios.Cliente.Business.Interfaces;
 using HotChocolate.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
 namespace Atraccion.Microservicios.Cliente.Api.GraphQL
@@ -51,7 +52,8 @@ namespace Atraccion.Microservicios.Cliente.Api.GraphQL
             int page, 
             int limit,
             [Service] IHttpClientFactory httpClientFactory,
-            [Service] IHttpContextAccessor httpContextAccessor)
+            [Service] IHttpContextAccessor httpContextAccessor,
+            [Service] IConfiguration configuration)
         {
             var client = httpClientFactory.CreateClient();
             var httpContext = httpContextAccessor.HttpContext;
