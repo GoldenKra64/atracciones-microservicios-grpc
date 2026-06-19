@@ -111,7 +111,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
                           return Card(
                             child: ListTile(
                               title: Text('Factura #${f.id}'),
-                              subtitle: Text(f.fecha),
                               trailing: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,

@@ -85,7 +85,7 @@ class AtraccionesService {
           imagenes
         }
         horarios(guid: \$guid) {
-          horGuid
+          horarioGuid
           fecha
           horaInicio
           horaFin

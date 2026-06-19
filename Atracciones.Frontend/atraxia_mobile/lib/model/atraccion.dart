@@ -122,7 +122,7 @@ class TicketInfo {
   factory TicketInfo.fromJson(Map<String, dynamic> json) {
     return TicketInfo(
       horId: json['horId'] ?? 0,
-      tckGuid: json['tck_guid'] ?? '',
+      tckGuid: json['tckGuid'] ?? '',
       tipo: json['tipo'] ?? '',
       precio: (json['precio'] ?? 0).toDouble(),
       moneda: json['moneda'] ?? '',
@@ -152,7 +152,7 @@ class HorarioProximo {
   factory HorarioProximo.fromJson(Map<String, dynamic> json) {
     return HorarioProximo(
       horarioId: json['horarioId'] ?? 0,
-      horGuid: json['hor_guid'],
+      horGuid: json['horarioGuid'] ?? '',
       atraccionId: json['atraccionId'] ?? 0,
       fecha: json['fecha'] ?? '',
       horaInicio: json['hora_inicio'] ?? '',

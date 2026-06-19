@@ -38,7 +38,6 @@ class ClienteService {
         }
         facturas(page: \$page, limit: \$limit) {
           id
-          fecha
           total
           estado
         }
