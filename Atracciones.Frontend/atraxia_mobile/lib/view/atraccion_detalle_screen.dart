@@ -113,7 +113,7 @@ class _AtraccionDetalleScreenState extends State<AtraccionDetalleScreen> {
 
     final payload = {
       'at_guid': widget.id,
-      'hor_guid': _horarioSeleccionado!.horGuid,
+      'hor_guid': _horarioSeleccionado!.horGuid ?? '',
       'origen_canal': 'ATRAXIA_MOBILE',
       'lineas': lineas,
     };

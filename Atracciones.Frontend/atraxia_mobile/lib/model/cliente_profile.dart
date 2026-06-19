@@ -26,13 +26,11 @@ class ClienteProfile {
 
 class FacturaItem {
   final String id;
-  final String fecha;
   final double total;
   final String estado;
 
   FacturaItem({
     required this.id,
-    required this.fecha,
     required this.total,
     required this.estado,
   });
@@ -40,7 +38,6 @@ class FacturaItem {
   factory FacturaItem.fromJson(Map<String, dynamic> json) {
     return FacturaItem(
       id: json['id']?.toString() ?? '',
-      fecha: json['fecha'] ?? '',
       total: (json['total'] ?? 0).toDouble(),
       estado: json['estado'] ?? '',
     );
